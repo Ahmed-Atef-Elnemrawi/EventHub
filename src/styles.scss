@@ -1,0 +1,49 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$EventHub-primary: mat.define-palette(mat.$blue-palette, 800);
+$EventHub-accent: mat.define-palette(mat.$blue-grey-palette, A100, A200, A400);
+
+$EventHub-warn: mat.define-palette(mat.$red-palette, A100, A200, A400);
+
+
+
+$EventHub-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $EventHub-primary,
+      accent: $EventHub-accent,
+      warn: $EventHub-warn,
+    ),
+  )
+);
+
+$EventHub-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $EventHub-primary,
+      accent: $EventHub-accent,
+      warn: $EventHub-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($EventHub-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: rgba(243, 246, 253, 0.324);
+}
+
+
+

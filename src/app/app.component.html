@@ -1,0 +1,14 @@
+<header>
+    <div fxLayout="row" fxLayoutGap="5em">
+      <a routerLink="login">login</a>
+      <a routerLink="signup">signup</a>
+      <a [routerLink]="['user', 1]" routerLinkActive="router-link-active"
+        >profile</a
+      >
+    </div>
+
+</header>
+
+<router-outlet></router-outlet>
+
+<footer></footer>

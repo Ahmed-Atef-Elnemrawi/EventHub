@@ -1,0 +1,76 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center">
+  <span fxFlex="15"></span>
+
+  <mat-card [ngClass.gt-xs]="['card']" class="mat-elevation-z15">
+    <mat-card-header class="card-header">
+      <mat-card-title>Sign in</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form
+        action="POST"
+        (ngSubmit)="onSubmit()"
+        [formGroup]="loginForm"
+        fxLayout="column"
+      >
+        <mat-form-field class="mat-form-field">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="Ex. me@example.com"
+            autofocus
+          />
+          <mat-error *ngIf="errorMessage$ | async as errorMessage">{{
+            errorMessage["email"]
+          }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Enter your password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          <mat-error *ngIf="errorMessage$ | async as errorMessage">{{
+            errorMessage["password"]
+          }}</mat-error>
+        </mat-form-field>
+
+        <a href="#" class="reset-password" fxFlexAlign="end"
+          >Forgot password?</a
+        >
+
+        <mat-error
+          fxFlexAlign="center"
+          *ngIf="errorMessage$ | async as errorMessage"
+          >{{ errorMessage["badRequest"] }}</mat-error
+        >
+        <div class="btn-group" fxLayout="column" fxLayoutGap=".5em">
+          <button type="submit" mat-flat-button color="primary">Login</button>
+          <button
+            mat-button
+            [routerLink]="['/signup']"
+            routerLinkActive="router-link-active"
+          >
+            Sign up
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
