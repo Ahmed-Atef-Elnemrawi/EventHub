@@ -33,6 +33,9 @@ $EventHub-dark-theme: mat.define-dark-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+// *{
+//   box-sizing: border-box;
+// }
 
 html,
 body {
@@ -42,8 +45,10 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: rgba(243, 246, 253, 0.324);
+  // background-color: rgba(243, 246, 253, 0.324);
+
 }
+
 
 
 

@@ -1,25 +1,22 @@
-a{
-  text-decoration: none;
-  &:hover,
-  &:focus,
-  &:visited,
-  &:active{
-    color:inherit
-  }
-}
-
-
-
 .container{
   width: 100%;
   height: 100%;
 }
 
 .card {
-  width: 450px;
+  width: 400px;
   height: fit-content;
 
 }
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+
 
 mat-card {
   padding: 2.5rem;
@@ -30,19 +27,10 @@ mat-card {
   -o-border-radius: 20px;
 }
 
-mat-card-header {
-  margin-bottom: 1em;
-}
 
-mat-card-header{
-  mat-card-title{
-    margin: 0 4.8rem;
-  }
-}
 
-.forgot-password {
-  display: block;
-  line-height: 0.5;
+.reset-password {
+  line-height: 0;
   font-size: 12px;
   font-weight: 500;
 }

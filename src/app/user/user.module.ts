@@ -10,9 +10,15 @@ import { MaterialModule } from '../material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
-  declarations: [LoginComponent, SignupComponent, ProfileComponent],
+  declarations: [
+    LoginComponent,
+    SignupComponent,
+    ProfileComponent,
+    ForgotPasswordComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -21,9 +27,15 @@ import { HttpClientModule } from '@angular/common/http';
     SharedModule,
     HttpClientModule,
     RouterModule.forChild([
-      { path: 'signup', component: SignupComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'user/:id', component: ProfileComponent },
+      {
+        path: 'users',
+        children: [
+          { path: 'signup', component: SignupComponent },
+          { path: 'login', component: LoginComponent },
+          { path: 'account-recovery', component: ForgotPasswordComponent },
+          { path: ':id', component: ProfileComponent },
+        ],
+      },
     ]),
   ],
 })

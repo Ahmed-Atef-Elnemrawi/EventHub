@@ -7,3 +7,9 @@ export interface UserForAuthDto{
   Email: string;
   Password: string;
 }
+
+
+export interface ForgotPasswordDto{
+  Email: string;
+  ResetPasswordClientURI: string;
+}
