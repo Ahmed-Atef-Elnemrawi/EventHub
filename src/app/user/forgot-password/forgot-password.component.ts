@@ -1,6 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { ForgotPasswordDto } from '../models';
 
@@ -8,34 +13,31 @@ import { ForgotPasswordDto } from '../models';
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForgotPasswordComponent implements OnInit, AfterViewInit {
-forgotPasswordForm!: FormGroup;
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
-  ngAfterViewInit(): void {
+export class ForgotPasswordComponent implements OnInit {
+  forgotPasswordForm!: FormGroup;
+  isSuccess: boolean = false;
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
-  }
+  constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.forgotPasswordForm = this.fb.group({
-      email: ['',[Validators.email, Validators.required]]
-    })
+      email: ['', [Validators.email, Validators.required]],
+    });
 
-    this.forgotPasswordForm.valueChanges.pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-      tap(v => console.log(this.forgotPasswordForm.get("email")?.value))
-    ).subscribe();
   }
 
-  onSubmit(){
+  onSubmit() {
+    let forgotPasswordDto: ForgotPasswordDto = {
+      Email: this.forgotPasswordForm.get('email')?.value,
+      ResetPasswordClientURI: 'https://localhost:4200/users/resetPassword',
+    };
 
-      let forgotPasswordDto: ForgotPasswordDto = {
-        Email: this.forgotPasswordForm.get("email")?.value,
-        ResetPasswordClientURI: "https://localhost:4200/users/resetPassword"
-      }
-
-      this.authService.forgotPasswordRequest(forgotPasswordDto).subscribe();
+    this.authService.forgotPasswordRequest(forgotPasswordDto).subscribe({
+      error: (err: HttpErrorResponse) =>this.errorMessageSubject.next("Invalid Request")
+    });
   }
 }
