@@ -37,6 +37,13 @@ $EventHub-dark-theme: mat.define-dark-theme(
   box-sizing: border-box;
 }
 
+:root{
+  .error {
+    color: #1565c0;
+    font-weight: 500;
+  }
+}
+
 html,
 body {
   height: 100%;
