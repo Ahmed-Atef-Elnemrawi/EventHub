@@ -38,6 +38,10 @@ mat-card-header {
   margin-bottom: 1em;
 }
 
+mat-form-field{
+  margin-bottom:.5em ;
+}
+
 
 .forgot-password {
   display: block;
@@ -47,7 +51,7 @@ mat-card-header {
 }
 
 .btn-group {
-  margin-top: 2rem;
+  margin-top: .5rem;
 }
 
 .btn-group>button {
