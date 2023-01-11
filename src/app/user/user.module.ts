@@ -11,6 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     SignupComponent,
     ProfileComponent,
     ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,
@@ -33,6 +35,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
           { path: 'signup', component: SignupComponent },
           { path: 'login', component: LoginComponent },
           { path: 'account-recovery', component: ForgotPasswordComponent },
+          {path:"reset-password", component:ResetPasswordComponent},
           { path: ':id', component: ProfileComponent },
         ],
       },
