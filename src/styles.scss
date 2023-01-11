@@ -42,6 +42,11 @@ $EventHub-dark-theme: mat.define-dark-theme(
     color: #1565c0;
     font-weight: 500;
   }
+
+  .backend-error{
+    font-weight: 400;
+    margin-bottom: 1em;
+  }
 }
 
 html,
