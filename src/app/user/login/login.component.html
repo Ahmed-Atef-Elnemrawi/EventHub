@@ -8,6 +8,12 @@
 
     <mat-card-content>
       <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" fxLayout="column">
+        <mat-error
+          class="backend-error"
+          fxFlexAlign="center"
+          *ngIf="backendErrors$ | async as error"
+          >{{ error}}</mat-error
+        >
         <mat-form-field appearance="fill">
           <mat-label>Email</mat-label>
           <input
@@ -52,13 +58,17 @@
           >
         </mat-card-subtitle>
 
-        <mat-error class="error" fxFlexAlign="center" *ngIf="errorMessages">{{
-          errorMessages["badRequest"]
-        }}</mat-error>
         <div class="btn-group" fxLayout="column" fxLayoutGap=".5em">
-          <button type="submit" mat-flat-button color="primary" class="btn">
+          <button
+            type="submit"
+            mat-flat-button
+            color="primary"
+            class="btn"
+            [disabled]="loginForm.invalid"
+          >
             Login
           </button>
+
           <button
             mat-flat-button
             [routerLink]="['/users/signup']"

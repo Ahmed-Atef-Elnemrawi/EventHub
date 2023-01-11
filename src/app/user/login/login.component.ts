@@ -10,7 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { debounceTime, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { AuthService } from '../auth.service';
-import { UserForAuthDto } from '../models';
+import { AuthValidationMessages, UserForAuthDto } from '../models';
 
 @Component({
   selector: 'app-login',
@@ -20,26 +20,17 @@ import { UserForAuthDto } from '../models';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChildren('FromControlName') FormInputElements!: ElementRef[];
-  private errorMessageSubject$ = new Subject<{ [key: string]: string }>();
-  errorMessage$ = this.errorMessageSubject$.asObservable();
+  private backendErrorSubject = new Subject<string>();
+  backendErrors$ = this.backendErrorSubject.asObservable();
 
+  errorMessages: { [key: string]: string } = {};
   userCredentials!: UserForAuthDto;
   genericValidator!: GenericValidator;
   loginForm!: FormGroup;
   hidePassword: boolean = true;
 
-  AuthValidationMessages = {
-    email: {
-      required: 'email is required',
-    },
-
-    password: {
-      required: 'password is required',
-    },
-  };
-
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    this.genericValidator = new GenericValidator(this.AuthValidationMessages);
+    this.genericValidator = new GenericValidator(AuthValidationMessages);
   }
 
   ngAfterViewInit(): void {
@@ -49,10 +40,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     merge(inputBlurs$, this.loginForm.valueChanges)
       .pipe(debounceTime(500))
-      .subscribe(() =>
-        this.errorMessageSubject$.next(
-          this.genericValidator.processMessages(this.loginForm)
-        )
+      .subscribe(
+        () =>
+          (this.errorMessages = this.genericValidator.processMessages(
+            this.loginForm
+          ))
       );
   }
 
@@ -70,13 +62,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.authService.login(this.userCredentials).subscribe({
       next: (value) => localStorage.setItem('token', JSON.stringify(value)),
       error: (err) => {
-        if (err.status === 400 || err.status === 401) {
-          this.errorMessageSubject$.next({
-            badRequest: 'Invalid Email or Password',
-          });
+        if (err.status === 400) {
+          this.backendErrorSubject.next(
+             'Invalid Email or Password'
+          );
         }
+
+        if(err.status ===401)
+          this.backendErrorSubject.next("Email Address is not associated with an EventHub Account")
       },
     });
+
+    console.log(this.loginForm)
   }
 }
-
