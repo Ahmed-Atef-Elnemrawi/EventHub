@@ -6,6 +6,7 @@ import {
   ResetPasswordDto,
   TokenDto,
   UserForAuthDto,
+  UserForRegistrationDto,
 } from './models';
 
 @Injectable({
@@ -15,6 +16,7 @@ export class AuthService {
   private loginPath = 'https://localhost:5001/api/authentication/login';
   private forgotPasswordPath ='https://localhost:5001/api/accounts/forgotPassword';
   private resetPasswordPath = 'https://localhost:5001/api/accounts/resetPassword';
+  private registerUserPath = 'https://localhost:5001/api/authentication/'
 
   constructor(private http: HttpClient) {}
 
@@ -39,4 +41,9 @@ export class AuthService {
       })
     });
   };
+
+
+  registerUser =(userForRegistration: UserForRegistrationDto) =>{
+    return this.http.post<void>(this.registerUserPath, userForRegistration);
+  }
 }
