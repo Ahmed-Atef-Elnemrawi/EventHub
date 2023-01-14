@@ -64,40 +64,43 @@ export const signupValidationMessages:
   | { [key: string]: { [key: string]: string } }
   | any = {
   firstName: {
-    required: 'FirstName is required',
-    minLength: 'FirstName should be at least 3 characters',
-    pattern: 'FirstName should not have a special characters',
+    required: 'FirstName is required. ',
+    minlength: 'FirstName should be at least 3 characters. ',
+    pattern: 'FirstName should not have a special characters. ',
   },
   lastName: {
-    required: 'LastName is required',
-    minlength: 'LastName should be at least 3 characters',
-    pattern: 'LastName should not have a special characters',
+    required: 'LastName is required. ',
+    minlength: 'LastName should be at least 3 characters. ',
+    pattern: 'LastName should not have a special characters. ',
   },
   userName: {
-    required: 'UserName is required',
-    pattern:'UserName should not have a special characters'
+    required: 'UserName is required. ',
+    minlength: 'userName should be at least 4 characters. ',
+    pattern: 'UserName should not have a special characters except "_". ',
   },
   email: {
-    required: 'Email is required',
-    pattern: 'Please enter a valid email',
+    required: 'Email is required.',
+    pattern: 'Please enter a valid email.',
   },
   password: {
     required: 'Password is required',
-    minLength: 'Password should be greater than 10 characters',
+    minlength: 'Password should be greater than 10 characters. ',
     pattern: `Password should have at least one uppercase(A-Z).
               password should have at least one number (0-9).
-              password should have at least one special character(!@#$%^&*=+-_).`,
+              password should have at least one special character(!@#$%^&*=+-).`,
   },
   phoneNumber: {
-    required: 'Phone number is requried',
+    required: 'Phone number is requried. ',
+    pattern: 'Please enter a valid number. ',
   },
   liveIn: {
-    required: 'Please enter your country',
+    required: 'Please enter your country.',
   },
   age: {
-    required: 'Age is requried',
+    required: 'Age is requried.',
+    min:'Age should be greater than 10 years. '
   },
   genre: {
-    required: 'Genre is required',
+    required: 'Genre is required.',
   },
 };

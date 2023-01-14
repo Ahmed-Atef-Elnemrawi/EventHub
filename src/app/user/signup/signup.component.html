@@ -46,11 +46,28 @@
 
           <mat-form-field appearance="fill">
             <mat-label>password</mat-label>
-            <input matInput type="password" formControlName="password" />
+            <input
+              matInput
+              [type]="hideConfirm ? 'password' : 'text'"
+              formControlName="password"
+            />
+
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="hideConfirm = !hideConfirm"
+              [attr.aria-label]="'Hide Confirm'"
+              [attr.aria-pressed]="hideConfirm"
+            >
+              <mat-icon>
+                {{ hideConfirm ? "visibility_off" : "visibility" }}
+              </mat-icon>
+            </button>
             <mat-error class="error" *ngIf="errorMessage$ | async as error">
               <div>{{ error["password"] }}</div>
             </mat-error>
           </mat-form-field>
+
           <button
             [ngClass]="{ 'margin-top': ['password'] }"
             type="button"
@@ -80,28 +97,62 @@
           fxLayout="column"
         >
           <mat-form-field appearance="fill">
-            <mat-label>Phone Number</mat-label>
-            <input
-              matInput
-              type="tel"
-              formControlName="phoneNumber"
-              autofocus
-            />
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              {{ error["phoneNumber"] }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
             <mat-label>Live In</mat-label>
-            <input matInput type="text" formControlName="liveIn" />
+            <input
+              type="text"
+              matInput
+              formControlName="liveIn"
+              required
+              [matAutocomplete]="autoOption"
+            />
+            <mat-autocomplete #autoOption="matAutocomplete">
+              <mat-option
+                *ngFor="let country of filteredCountries$ | async as countries"
+                value="{{ country['name'] }}"
+              >
+                {{ country["name"] }}
+              </mat-option>
+            </mat-autocomplete>
+
             <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
               error["liveIn"]
             }}</mat-error>
           </mat-form-field>
 
+          <div fxLayout="row" fxLayoutGap="5px" formGroupName="phoneGroup">
+            <mat-form-field fxFlex="15%" appearance="fill">
+              <mat-label>code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="countryCode"
+                readonly
+                value="{{ (countryCode$ | async)?.dial_code }}"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" fxFlex="85%">
+              <mat-label>Phone Number</mat-label>
+              <input
+                matInput
+                type="tel"
+                formControlName="phoneNumber"
+                placeholder="xxx-xxx-xxxx"
+              />
+              <mat-error class="error" *ngIf="errorMessage$ | async as error">
+                {{ error["phoneNumber"] }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <mat-form-field appearance="fill">
             <mat-label>Age</mat-label>
-            <input matInput type="text" formControlName="age" />
+            <input
+              matInput
+              type="text"
+              placeholder="10+"
+              formControlName="age"
+            />
             <mat-error class="error" *ngIf="errorMessage$ | async as error">
               {{ error["age"] }}
             </mat-error>
@@ -109,11 +160,11 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Genre</mat-label>
-            <select matNativeControl formControlName="genre">
-              <option value="">-</option>
-              <option value="1">Male</option>
-              <option value="2">Female</option>
-            </select>
+            <mat-select matNativeControl formControlName="genre">
+              <mat-option value=" ">-</mat-option>
+              <mat-option value="1">Male</mat-option>
+              <mat-option value="2">Female</mat-option>
+            </mat-select>
             <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
               error["genre"]
             }}</mat-error>
@@ -121,11 +172,11 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Join As</mat-label>
-            <select matNativeControl formControlName="roles">
-              <option value=" ">User</option>
-              <option value="producer">Artist</option>
-              <option value="organization">Organization</option>
-            </select>
+            <mat-select matNativeControl formControlName="roles">
+              <mat-option value=" ">User</mat-option>
+              <mat-option value="producer">Artist</mat-option>
+              <mat-option value="organization">Organization</mat-option>
+            </mat-select>
           </mat-form-field>
           <button
             mat-flat-button
