@@ -6,7 +6,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../material/material.module';
+import { MaterialModule } from '../shared/material/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -35,7 +35,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
           { path: 'signup', component: SignupComponent },
           { path: 'login', component: LoginComponent },
           { path: 'account-recovery', component: ForgotPasswordComponent },
-          {path:"reset-password", component:ResetPasswordComponent},
+          { path: 'reset-password', component: ResetPasswordComponent },
           { path: ':id', component: ProfileComponent },
         ],
       },
