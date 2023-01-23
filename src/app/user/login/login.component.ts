@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   OnInit,
@@ -7,10 +8,14 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { props, Store } from '@ngrx/store';
+import { debounceTime, fromEvent, map, merge, Observable, Subject } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
+import { State } from 'src/app/state/state';
 import { AuthService } from '../auth.service';
 import { AuthValidationMessages, UserForAuthDto } from '../models';
+import { getError } from '../state';
+import * as AuthActions from '../state/actions';
 
 @Component({
   selector: 'app-login',
@@ -20,16 +25,18 @@ import { AuthValidationMessages, UserForAuthDto } from '../models';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChildren('FromControlName') FormInputElements!: ElementRef[];
-  private backendErrorSubject = new Subject<string>();
-  backendErrors$ = this.backendErrorSubject.asObservable();
 
+  backendErrors$ = new Observable<string>();
   errorMessages: { [key: string]: string } = {};
-  userCredentials!: UserForAuthDto;
   genericValidator!: GenericValidator;
   loginForm!: FormGroup;
   hidePassword: boolean = true;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private store: Store<State>
+  ) {
     this.genericValidator = new GenericValidator(AuthValidationMessages);
   }
 
@@ -56,23 +63,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    let values = this.loginForm.value;
-    this.userCredentials = { ...values } as UserForAuthDto;
+    let userCredentials = { ...this.loginForm.value} as UserForAuthDto
 
-    this.authService.login(this.userCredentials).subscribe({
-      next: (value) => localStorage.setItem('token', JSON.stringify(value)),
-      error: (err) => {
-        if (err.status === 400) {
-          this.backendErrorSubject.next(
-             'Invalid Email or Password'
-          );
-        }
 
-        if(err.status ===401)
-          this.backendErrorSubject.next("Email Address is not associated with an EventHub Account")
-      },
-    });
-
-    console.log(this.loginForm)
+    this.store.dispatch(AuthActions.login({ user: userCredentials }));
+    this.backendErrors$ = this.store.select(getError);
+  
   }
 }
