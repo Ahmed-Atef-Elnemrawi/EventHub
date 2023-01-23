@@ -1,7 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError, Observable, of, throwError } from 'rxjs';
+import {
+  AuthResponse,
   ForgotPasswordDto,
   ResetPasswordDto,
   TokenDto,
@@ -13,37 +18,39 @@ import {
   providedIn: 'root',
 })
 export class AuthService {
-  private loginPath = 'https://localhost:5001/api/authentication/login';
-  private forgotPasswordPath ='https://localhost:5001/api/accounts/forgotPassword';
-  private resetPasswordPath = 'https://localhost:5001/api/accounts/resetPassword';
-  private registerUserPath = 'https://localhost:5001/api/authentication/'
+  private rootPath = 'https://localhost:5001/api/users';
+
 
   constructor(private http: HttpClient) {}
 
   login = (userForAuth: UserForAuthDto) => {
-    return this.http.post<TokenDto>(this.loginPath, userForAuth, {
+    return this.http
+      .post<AuthResponse>(`${this.rootPath}/login`, userForAuth, {
+        headers: new HttpHeaders({
+          'content-type': 'application/json',
+          accept: 'application/json',
+        }),
+      })
+
+  };
+
+  forgotPasswordRequest = (forgotPasswordDto: ForgotPasswordDto) => {
+    return this.http.post<void>(`${this.rootPath}/forgotPassword`, forgotPasswordDto);
+  };
+
+  resetPassword = (resetPassword: ResetPasswordDto) => {
+    return this.http.post<void>(`${this.rootPath}/resetPassword`, resetPassword, {
       headers: new HttpHeaders({
         'content-type': 'application/json',
-        'accept': 'application/json',
+        accept: 'application/json',
       }),
     });
   };
 
-  forgotPasswordRequest = (forgotPasswordDto: ForgotPasswordDto) => {
-    return this.http.post<void>(this.forgotPasswordPath, forgotPasswordDto);
-  };
-
-  resetPassword = (resetPassword: ResetPasswordDto) => {
-    return this.http.post<void>(this.resetPasswordPath, resetPassword, {
-      headers:new HttpHeaders({
-        'content-type': 'application/json',
-        'accept': 'application/json'
-      })
-    });
+  registerUser = (userForRegistration: UserForRegistrationDto) => {
+    return this.http.post<void>(`${this.rootPath}/signup`, userForRegistration);
   };
 
 
-  registerUser =(userForRegistration: UserForRegistrationDto) =>{
-    return this.http.post<void>(this.registerUserPath, userForRegistration);
-  }
+
 }
