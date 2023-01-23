@@ -12,7 +12,7 @@
           class="backend-error"
           fxFlexAlign="center"
           *ngIf="backendErrors$ | async as error"
-          >{{ error}}</mat-error
+          >{{ error }}</mat-error
         >
         <mat-form-field appearance="fill">
           <mat-label>Email</mat-label>
@@ -37,6 +37,8 @@
           />
 
           <button
+            class="hide-button"
+            type="button"
             mat-icon-button
             matSuffix
             (click)="hidePassword = !hidePassword"
