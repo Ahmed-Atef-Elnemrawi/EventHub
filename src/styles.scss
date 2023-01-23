@@ -46,6 +46,7 @@ $EventHub-dark-theme: mat.define-dark-theme(
   .backend-error{
     font-weight: 400;
     margin-bottom: 1em;
+    text-align: center;
   }
 }
 
@@ -58,7 +59,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  // background-color: rgba(243, 246, 253, 0.324);
+  background-color: #f3f6fd;
 
 }
 
