@@ -1,6 +1,24 @@
+export interface UserProfile {
+  id: string,
+  firstName: string;
+  lastName: string;
+  userName: string;
+  age: 0;
+  email: string;
+  phoneNumber: string;
+  genre: string;
+  country: string;
+  profilePicture?: string;
+}
+
 export interface TokenDto {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface AuthResponse {
+  tokenDto: TokenDto,
+  userProfile: UserProfile
 }
 
 export interface UserForAuthDto {
@@ -18,7 +36,7 @@ export interface UserForRegistrationDto {
   liveIn: string;
   genre: genre;
   age: number;
-  roles: string[];
+  roles?: string[] | [];
 }
 
 export enum genre {
@@ -98,7 +116,9 @@ export const signupValidationMessages:
   },
   age: {
     required: 'Age is requried.',
-    min:'Age should be greater than 10 years. '
+    min: 'Age should be greater than 10 years. ',
+    max: 'Age should be less than 80 years. ',
+    pattern: 'Age should be a number',
   },
   genre: {
     required: 'Genre is required.',
