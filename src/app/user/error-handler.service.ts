@@ -44,15 +44,19 @@ export class ErrorHandlerService implements HttpInterceptor {
 
       values.forEach((val) => {
         val.map((m: string) => {
-          message += `${m} \n`;
+          message += `${m} \n `;
         });
       });
-
       return message;
-    } else {
+    }
+
+    if(this.router.url === '/users/account-recovery')
+      return 'Email Address is not associated with an EventHub Account'
+
       return error.error ? error.error : error.message;
     }
-  }
+
+
 
   handleNotFound(error: HttpErrorResponse): string {
     this.router.navigate(['/NotFound']);
