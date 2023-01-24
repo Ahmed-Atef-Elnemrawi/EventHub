@@ -23,7 +23,7 @@ export class UserEffects {
       exhaustMap((action) =>
         this.authService.login(action.user).pipe(
           map((authResponse) => {
-            localStorage.setItem('token', authResponse.tokenDto.accessToken);
+            localStorage.setItem('access_token', authResponse.tokenDto.accessToken);
             this.router.navigateByUrl(
               `/users/${authResponse.userProfile.userName}`
             );
