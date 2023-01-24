@@ -76,7 +76,7 @@ export const authReducer = createReducer<UserState>(
         refreshToken: '',
       },
       userProfile: {
-        id:'',
+        id: '',
         firstName: '',
         lastName: '',
         userName: '',
@@ -87,16 +87,82 @@ export const authReducer = createReducer<UserState>(
         country: '',
         profilePicture: '',
       },
-      message: 'logout success'
+      message: 'logout success',
+      error: '',
     };
   }),
 
-  on(AuthActions.logoutFailure, (state) =>{
+  on(AuthActions.logoutFailure, (state) => {
     return {
       ...state,
       message: 'logout cancelled',
-      isAuthenticated: false
-    }
-  })
+      isAuthenticated: false,
+    };
+  }),
 
+  on(AuthActions.signup, (state) => {
+    return {
+      ...state,
+    };
+  }),
+
+  on(AuthActions.signupSuccess, (state) => {
+    return {
+      ...state,
+      message: 'signup success',
+      error: '',
+    };
+  }),
+
+  on(AuthActions.signupFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error,
+      message: 'signup failed!',
+    };
+  }),
+
+  on(AuthActions.forgotPassword, (state) => {
+    return {
+      ...state,
+    };
+  }),
+
+  on(AuthActions.forgotPasswordSuccess, (state) => {
+    return {
+      ...state,
+      message: 'forgot password request success',
+      error: '',
+    };
+  }),
+
+  on(AuthActions.forgotPasswordFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error,
+      message: 'forgot password request failed',
+    };
+  }),
+
+  on(AuthActions.resetPassword, (state) => {
+    return {
+      ...state,
+    };
+  }),
+
+  on(AuthActions.resetPasswordSuccess, (state) => {
+    return {
+      ...state,
+      message: 'reset password success',
+      error: '',
+    };
+  }),
+
+  on(AuthActions.resetPasswordFailure, (state, action) => {
+    return {
+      ...state,
+      message: 'reset password success',
+      error: action.error,
+    };
+  })
 );
