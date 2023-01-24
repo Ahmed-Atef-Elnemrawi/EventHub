@@ -1,6 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { AuthResponse, TokenDto, UserForAuthDto, UserForRegistrationDto} from '../../models';
+import {
+  AuthResponse,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+  TokenDto,
+  UserForAuthDto,
+  UserForRegistrationDto,
+} from '../../models';
 
 export const login = createAction(
   '[User] Login User',
@@ -17,27 +24,46 @@ export const loginFailure = createAction(
   props<{ error: string }>()
 );
 
-export const LoadUser = createAction(
-  '[User] Load User',
-
-)
+export const LoadUser = createAction('[User] Load User');
 
 export const logout = createAction('[User] Logout User');
 export const logoutSuccess = createAction('[User] Logout Success');
-export const logoutFailure =createAction( '[User] Logout failed');
-
+export const logoutFailure = createAction('[User] Logout failed');
 
 export const signup = createAction(
   '[User] Signup User',
   props<{ user: UserForRegistrationDto }>()
 );
 
-export const signupSuccess = createAction(
-  '[User] Signup Success',
-  props<{ message: string }>()
-);
+export const signupSuccess = createAction('[User] Signup Success');
 
 export const signupFailure = createAction(
-  '[User] Signup Fail',
+  '[User] Signup Failed',
+  props<{ error: string }>()
+);
+
+export const forgotPassword = createAction(
+  '[User] Forgot Password Request',
+  props<{ forgotPasswordDto: ForgotPasswordDto }>()
+);
+
+export const forgotPasswordSuccess = createAction(
+  '[User] Forgot Password Request Success'
+);
+
+export const forgotPasswordFailure = createAction(
+  '[User] Forgot Password Request Failed',
+  props<{ error: string }>()
+);
+
+export const resetPassword = createAction(
+  '[User] reset password',
+  props<{ resetPasswordDto: ResetPasswordDto }>()
+);
+export const resetPasswordSuccess = createAction(
+  '[User] reset password success'
+);
+export const resetPasswordFailure = createAction(
+  '[User] reset password failed',
   props<{ error: string }>()
 );
