@@ -15,8 +15,8 @@
           <mat-error
           class="backend-error"
           fxFlexAlign="center"
-          *ngIf="backendError"
-          >{{ backendError}}</mat-error
+          *ngIf="backendError$ | async as error"
+          >{{ error}}</mat-error
         >
           <mat-form-field appearance="fill">
             <mat-label>FirstName</mat-label>
@@ -105,8 +105,8 @@
         <mat-error
           class="backend-error"
           fxFlexAlign="center"
-          *ngIf="backendError"
-          >{{ backendError}}</mat-error>
+          *ngIf="backendError$ | async as error"
+          >{{ error}}</mat-error>
 
           <mat-form-field appearance="fill">
             <mat-label>Live In</mat-label>

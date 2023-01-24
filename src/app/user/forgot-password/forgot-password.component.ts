@@ -1,10 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, observable, Subject } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
+import { State } from 'src/app/state/state';
 import { AuthService } from '../auth.service';
 import { ForgotPasswordDto } from '../models';
+import { getError } from '../state';
+import * as AuthActions from '../state/actions'
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,11 +21,10 @@ export class ForgotPasswordComponent implements OnInit {
   isSuccess: boolean = false;
   validator!:GenericValidator;
   validationErrors : {[key: string]: string} = {};
-  private errorMessageSubject = new Subject<string>();
-  errorMessage$ = this.errorMessageSubject.asObservable();
+ backendError$! : Observable<string>;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
-    // this.validator = new GenericValidator()
+  constructor(private fb: FormBuilder, private store: Store<State>) {
+
   }
 
   ngOnInit(): void {
@@ -36,13 +39,16 @@ export class ForgotPasswordComponent implements OnInit {
       resetPasswordClientURI: 'https://localhost:4200/users/reset-password',
     };
 
-    this.authService.forgotPasswordRequest(forgotPasswordDto).subscribe({
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 400)
-          this.errorMessageSubject.next(
-            'Email Address is not associated with an EventHub Account'
-          );
-      },
-    });
+    this.store.dispatch(AuthActions.forgotPassword({forgotPasswordDto}))
+    this.backendError$ = this.store.select(getError);
+
+    // this.authService.forgotPasswordRequest(forgotPasswordDto).subscribe({
+    //   error: (err: HttpErrorResponse) => {
+    //     if (err.status === 400)
+    //       this.errorMessageSubject.next(
+    //         'Email Address is not associated with an EventHub Account'
+    //       );
+    //   },
+    // });
   }
 }

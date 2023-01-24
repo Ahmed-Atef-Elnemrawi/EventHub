@@ -16,14 +16,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { debounceTime, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
+import { State } from 'src/app/state/state';
 import { AuthService } from '../auth.service';
 import { ResetPasswordDto, resetPasswordValidationMessages } from '../models';
+import { getError } from '../state';
+import * as AuthActions from '../state/actions';
 
-function compare(control: AbstractControl): {[key:string]: boolean} | null {
+function compare(control: AbstractControl): { [key: string]: boolean } | null {
   const parent = control.parent;
-  const password = parent?.get('password')
+  const password = parent?.get('password');
   const confirm = parent?.get('confirm');
 
   if (password?.pristine || confirm?.pristine) {
@@ -42,8 +46,7 @@ function compare(control: AbstractControl): {[key:string]: boolean} | null {
 export class ResetPasswordComponent implements OnInit, AfterViewInit {
   @ViewChildren('FormControlName') FormInputElements!: ElementRef[];
 
-  private backendErrorsSubject = new Subject<string[]>();
-  backendErrors$ = this.backendErrorsSubject.asObservable();
+  backendErrors$!: Observable<string>;
 
   resetPasswordForm!: FormGroup;
   validationErrors: { [key: string]: string } = {};
@@ -53,9 +56,8 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private store: Store<State>,
     private route: ActivatedRoute,
-    private router: Router
   ) {
     this.genericValidators = new GenericValidator(
       resetPasswordValidationMessages
@@ -73,17 +75,24 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
           this.validationErrors = this.genericValidators.processMessages(
             this.resetPasswordForm
           );
-
-          console.log(this.resetPasswordForm);
         },
       });
   }
 
   ngOnInit(): void {
     this.resetPasswordForm = this.fb.group({
-        "password":["",[Validators.required]],
-        "confirm":["",[Validators.required, compare]]
-      });
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+          ),
+        ],
+      ],
+      confirm: ['', [Validators.required, compare]],
+    });
   }
 
   onSubmit = () => {
@@ -91,22 +100,13 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
     var email = this.route.snapshot.queryParamMap.get('email');
 
     var value = this.resetPasswordForm.value;
-    var resetPassword: ResetPasswordDto = {
+    var resetPasswordDto: ResetPasswordDto = {
       ...value,
       token,
       email,
     };
 
-    this.authService.resetPassword(resetPassword).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/users/login');
-      },
-      error: (err: HttpErrorResponse) => {
-        if (err.error.errors instanceof Array) {
-          this.backendErrorsSubject.next( err.error.errors);
-        }
-      },
-    });
-    console.log(this.validationErrors);
+    this.store.dispatch(AuthActions.resetPassword({ resetPasswordDto }));
+    this.backendErrors$ = this.store.select(getError);
   };
 }

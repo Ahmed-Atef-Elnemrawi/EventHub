@@ -72,9 +72,13 @@ export const resetPasswordValidationMessages: {
 } = {
   password: {
     required: 'Password is required',
+    minlength: 'Password should be greater than 10 characters. ',
+    pattern: `Password should have at least one uppercase(A-Z).
+              password should have at least one number (0-9).
+              password should have at least one special character(!@#$%^&*=+-).`,
   },
   confirm: {
-    match: 'Password and confirmation does not match',
+    match: 'Password and confirmation does not match'
   },
 };
 
