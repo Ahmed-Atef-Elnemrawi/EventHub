@@ -42,13 +42,5 @@ export class ForgotPasswordComponent implements OnInit {
     this.store.dispatch(AuthActions.forgotPassword({forgotPasswordDto}))
     this.backendError$ = this.store.select(getError);
 
-    // this.authService.forgotPasswordRequest(forgotPasswordDto).subscribe({
-    //   error: (err: HttpErrorResponse) => {
-    //     if (err.status === 400)
-    //       this.errorMessageSubject.next(
-    //         'Email Address is not associated with an EventHub Account'
-    //       );
-    //   },
-    // });
   }
 }

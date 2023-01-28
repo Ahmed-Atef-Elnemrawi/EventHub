@@ -1,26 +1,5 @@
-.container {
-  width: 100%;
-  height: 100%;
 
-}
 
-.card {
-  width: 450px;
-  height: fit-content;
-  margin: 0 auto;
-  margin-bottom: .5rem;
-}
-
-mat-card {
-  min-width: 300px;
-  padding: 2.5rem;
-  margin-inline: 2rem;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
-}
 
 mat-card-header {
   margin-bottom: 1rem;
@@ -32,6 +11,7 @@ mat-card-header {
     margin-bottom: 1rem;
   }
 }
+
 
 mat-form-field {
   margin-bottom: .5em;
@@ -58,4 +38,6 @@ mat-form-field{
       margin-top: 2.2rem;
     }
   }
+
+
 
