@@ -38,6 +38,13 @@ $EventHub-dark-theme: mat.define-dark-theme(
 }
 
 :root{
+
+  .container {
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+  }
+
   .error {
     color: #1565c0;
     font-weight: 500;
@@ -48,7 +55,22 @@ $EventHub-dark-theme: mat.define-dark-theme(
     margin-bottom: 1em;
     text-align: center;
   }
-}
+
+  mat-card {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+
+
+  }
+
 
 html,
 body {
