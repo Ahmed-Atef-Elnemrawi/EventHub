@@ -1,1 +1,109 @@
-<p>profile works!</p>
+<button
+  type="button"
+  title="menu"
+  class="toggle-btn"
+  (click)="toggle()"
+  fxShow.xs="true"
+  fxHide.gt-xs="true"
+>
+  <mat-icon fontIcon="arrow_forward_ios" matSuffix></mat-icon>
+</button>
+<div
+  class="container"
+  fxLayout-xs="column"
+  fxLayout.gt-xs="row"
+  fxLayoutGap.gt-xs="1rem"
+  fxLayoutGap.gt-sm="2rem"
+  ngClass.gt-xs="container-gt-sm"
+  ngClass.xs="container-xs"
+  ngClass.sm="container-sm"
+>
+  <mat-card
+    fxHide.xs="true"
+    fxFlex.gt-xs="30%"
+    fxFlex.gt-sm="20%"
+    class="mat-elevation-z3 sidenav-container-gt-xs"
+  >
+    <div class="sidenav-content" fxLayout="column">
+      <button
+        id="btn"
+        mat-flat-button
+        routerLink="/users/{{ userName | async }}"
+        routerLinkActive="btn"
+      >
+        Events I Attend
+      </button>
+      <button
+        id="btn"
+        mat-flat-button
+        routerLink="/users/{{ userName | async }}"
+      >
+        Who I'm Follow
+      </button>
+      <button
+        id="btn"
+        mat-flat-button
+        routerLink="/users/{{ userName | async }}"
+      >
+        My Page
+      </button>
+      <button
+        id="btn"
+        (click)="onClick($event)"
+        mat-flat-button
+        routerLink="/users/{{ userName | async }}/edit"
+      >
+        Edit My Profile
+      </button>
+      <button id="btn" mat-flat-button (click)="logout()">Log Out</button>
+    </div>
+  </mat-card>
+
+  <div fxFlex.gt-sm="80%" fxFlex.gt-xs="75%" fxFlex.xs="100%">
+    <router-outlet>
+      <!--
+          TODO: Add who I'm Follow route
+          TODO: Add Event I Attend route
+          TODO: Add My Page Route
+          TODO: Add Edit Profile Route
+         -->
+    </router-outlet>
+  </div>
+</div>
+<div class="sidenav-container-xs" #sidenav fxHide.gt-xs>
+  <button
+    type="button"
+    class="close-btn"
+    mat-icon-button
+    color="primary"
+    (click)="toggle()"
+  >
+    <mat-icon fontIcon="close"></mat-icon>
+  </button>
+  <div class="sidenav-xs">
+    <div class="sidenav-content" fxLayout="column">
+      <button type="button" (click)="toggle()" mat-flat-button>
+        Who I'm Follow
+      </button>
+      <button
+        type="button"
+        (click)="toggle()"
+        mat-flat-button
+        routerLink=""
+        routerLinkActive
+      >
+        Event I Attends
+      </button>
+      <button type="button" (click)="toggle()" mat-flat-button>My Page</button>
+      <button
+        type="button"
+        (click)="toggle()"
+        mat-flat-button
+        routerLink="/users/{{ userName | async }}/edit"
+      >
+        Edit Profile
+      </button>
+      <button type="button" mat-flat-button (click)="logout()">Log Out</button>
+    </div>
+  </div>
+</div>
