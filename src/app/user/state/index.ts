@@ -1,13 +1,8 @@
-import { state } from '@angular/animations';
 import {
-  createFeature,
   createFeatureSelector,
   createSelector,
 } from '@ngrx/store';
 import { UserState } from './user.reducer';
-import { JwtHelperService } from '@auth0/angular-jwt';
-
-
 const getUserFeatureState = createFeatureSelector<UserState>('user');
 
 export const getIsAuthenticated = createSelector(
@@ -15,6 +10,10 @@ export const getIsAuthenticated = createSelector(
   (state) => state.isAuthenticated
 );
 
+export const getUserId = createSelector(
+  getUserFeatureState,
+  (state)=> state.userId
+)
 export const getError = createSelector(
   getUserFeatureState,
   (state) => state.error
@@ -25,10 +24,12 @@ export const getUserProfile = createSelector(
   (state) => state.userProfile
 );
 
-export const getUserId = createSelector(
+export const getUserName = createSelector(
   getUserFeatureState,
-  (state) => state.userProfile.id
+  (state) => state.userProfile.userName
 );
+
+
 
 export const getAccessToken = createSelector(
   getUserFeatureState,
