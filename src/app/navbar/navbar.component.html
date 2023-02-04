@@ -1,0 +1,138 @@
+<div fxLayout="column" class="header-container">
+  <div
+    class="app-header"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+    ngClass.xs="padding-sm"
+  >
+    <div class="logo" fxFlexAlign="center"><span>Event</span>Hub</div>
+
+    <mat-card
+      class="mat-elevation-z5 search-wrapper"
+      fxHide.xs
+      fxShow.gt-xs
+      title="search"
+      fxFlexAlign="center"
+    >
+      <form
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        [formGroup]="searchForm"
+      >
+        <mat-select value="event" formControlName="searchCategory">
+          <mat-option value="event" title="Event"
+            ><mat-icon fontIcon="event"></mat-icon> Event</mat-option
+          >
+          <mat-option value="org" title="organization">
+            <mat-icon fontIcon="business"></mat-icon> Org</mat-option
+          >
+          <mat-option value="artist" title="Artist">
+            <mat-icon fontIcon="person"></mat-icon> Artist</mat-option
+          >
+        </mat-select>
+
+        <input matInput class="search" type="search" formControlName="search" />
+        <mat-icon fontIcon="search" matSuffix></mat-icon>
+      </form>
+    </mat-card>
+    <div
+      class="app-header-right"
+      fxLayout="row"
+      fxFlexAlign="center"
+      ngStyle.xs="margin-left:.8em"
+      ngStyle.gt-xs="margin-left:2em"
+      *ngIf="isAuthenticated$ | async"
+    >
+      <button class="mode">
+        <mat-icon
+          fontIcon="light_mode"
+          class="btn"
+          title="switch theme"
+        ></mat-icon>
+      </button>
+
+      <button type="button" class="notifications btn">
+        <mat-icon
+          matBadge="{{ notificationsCount }}"
+          matBadgeOverlap="true"
+          matBadgeSize="small"
+          matBadgePosition="before"
+          fontIcon="notifications"
+          title="notifications"
+        ></mat-icon>
+      </button>
+
+      <button
+        mat-fab
+        color="primary"
+        type="button"
+        title="profile"
+        class="profile btn"
+        [matMenuTriggerFor]="menu"
+      >
+        {{ avatarName }}
+      </button>
+      <mat-menu #menu="matMenu" class="profile-menu">
+        <button mat-menu-item routerLink="users/profile">
+          {{ userName$ | async }}
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">Log Out</button>
+      </mat-menu>
+    </div>
+
+    <div
+      class="app-header-right"
+      fxFlexAlign="center"
+      *ngIf="!(isAuthenticated$ | async)"
+    >
+      <button
+        mat-flat-button
+        color="primary"
+        class="btn"
+        [routerLink]="['/users/login']"
+      >
+        Log In
+      </button>
+      <button
+        mat-flat-button
+        class="btn signUp-btn"
+        [routerLink]="['users/signup']"
+        fxHide.xs
+        fxHide.sm
+      >
+        Sign Up
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign=" center center" style="padding: 1em">
+    <mat-card
+      class="mat-elevation-z0 search-wrapper-xs"
+      fxShow.gt-xs="true"
+      fxShow.gt-xs="false"
+    >
+      <form
+        [formGroup]="searchForm"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        [formGroup]="searchForm"
+      >
+        <mat-select value="event" formControlName="searchCategory">
+          <mat-option value="event" title="Event"
+            ><mat-icon fontIcon="event"></mat-icon> Event</mat-option
+          >
+          <mat-option value="org" title="organization">
+            <mat-icon fontIcon="business"></mat-icon> Org</mat-option
+          >
+          <mat-option value="artist" title="Artist">
+            <mat-icon fontIcon="person"></mat-icon> Artist</mat-option
+          >
+        </mat-select>
+        <input matInput class="search" type="search" formControlName="search" />
+        <mat-icon fontIcon="search" matSuffix></mat-icon>
+      </form>
+    </mat-card>
+  </div>
+  <span fxFlex="2rem"></span>
+</div>
