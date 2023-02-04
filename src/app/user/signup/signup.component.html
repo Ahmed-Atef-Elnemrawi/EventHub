@@ -1,210 +1,193 @@
 <div class="container" fxLayout="column" fxLayoutAlign="stretch center">
-  <span fxFlex="8rem"></span>
-
-    <mat-card
-      class="mat-elevation-z10"
-      fxFlexAlign="center"
-      [ngClass]="{ 'first-card_show': hideCard }"
-    >
-      <mat-card-header fxLayout="column" fxLayoutAlign="start center">
-        <mat-card-title>Sign Up</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form [formGroup]="signUpForm" fxLayout="column">
-          <mat-error
+  <mat-card
+    class="mat-elevation-z3"
+    fxFlexAlign="center"
+    [ngClass]="{ 'first-card_show': hideCard }"
+  >
+    <mat-card-header fxLayout="column" fxLayoutAlign="start center">
+      <mat-card-title>Sign Up</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="signUpForm" fxLayout="column">
+        <mat-error
           class="backend-error"
           fxFlexAlign="center"
           *ngIf="backendError$ | async as error"
           >{{ error}}</mat-error
         >
-          <mat-form-field appearance="fill">
-            <mat-label>FirstName</mat-label>
-            <input matInput type="text" formControlName="firstName" autofocus />
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
-              error["firstName"]
-            }}</mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>FirstName</mat-label>
+          <input matInput type="text" formControlName="firstName" autofocus />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+            error["firstName"]
+          }}</mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>LastName</mat-label>
-            <input matInput type="text" formControlName="lastName" />
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              {{ error["lastName"] }}
-            </mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>LastName</mat-label>
+          <input matInput type="text" formControlName="lastName" />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            {{ error["lastName"] }}
+          </mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>UserName</mat-label>
-            <input matInput type="text" formControlName="userName" />
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              {{ error["userName"] }}
-            </mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>UserName</mat-label>
+          <input matInput type="text" formControlName="userName" />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            {{ error["userName"] }}
+          </mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" />
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              {{ error["email"] }}
-            </mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            {{ error["email"] }}
+          </mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>password</mat-label>
-            <input
-              matInput
-              [type]="hideConfirm ? 'password' : 'text'"
-              formControlName="password"
-            />
-
-            <button
-            type="button"
-              mat-icon-button
-              matSuffix
-              (click)="hideConfirm = !hideConfirm"
-              [attr.aria-label]="'Hide Confirm'"
-              [attr.aria-pressed]="hideConfirm"
-            >
-              <mat-icon>
-                {{ hideConfirm ? "visibility_off" : "visibility" }}
-              </mat-icon>
-            </button>
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              <div>{{ error["password"] }}</div>
-            </mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>password</mat-label>
+          <input
+            matInput
+            [type]="hideConfirm ? 'password' : 'text'"
+            formControlName="password"
+          />
 
           <button
             type="button"
-            mat-flat-button
-            class="btn"
-            color="primary"
-            (click)="hideCard = !hideCard"
+            mat-icon-button
+            matSuffix
+            (click)="hideConfirm = !hideConfirm"
+            [attr.aria-label]="'Hide Confirm'"
+            [attr.aria-pressed]="hideConfirm"
           >
-            next
+            <mat-icon>
+              {{ hideConfirm ? "visibility_off" : "visibility" }}
+            </mat-icon>
           </button>
-        </form>
-      </mat-card-content>
-    </mat-card>
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            <div>{{ error["password"] }}</div>
+          </mat-error>
+        </mat-form-field>
 
-
-    <mat-card
-      class="mat-elevation-z10 "
-      fxFlexAlign="center"
-      [ngClass]="{ 'second-card_show': !hideCard }"
-    >
-      <mat-card-content>
-        <form
-          [formGroup]="signUpForm"
-          (ngSubmit)="onSubmit()"
-          fxLayout="column"
+        <button
+          type="button"
+          mat-flat-button
+          class="btn"
+          color="primary"
+          (click)="hideCard = !hideCard"
         >
+          next
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card
+    class="mat-elevation-z3"
+    fxFlexAlign="center"
+    [ngClass]="{ 'second-card_show': !hideCard }"
+  >
+    <mat-card-content>
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" fxLayout="column">
         <mat-error
           class="backend-error"
           fxFlexAlign="center"
           *ngIf="backendError$ | async as error"
-          >{{ error}}</mat-error>
+          >{{ error}}</mat-error
+        >
 
-          <mat-form-field appearance="fill">
-            <mat-label>Live In</mat-label>
-            <input
-              type="text"
-              matInput
-              formControlName="liveIn"
-              required
-              [matAutocomplete]="autoOption"
-            />
-            <mat-autocomplete #autoOption="matAutocomplete">
-              <mat-option
-                *ngFor="let country of filteredCountries$ | async as countries"
-                value="{{ country['name'] }}"
-              >
-                {{ country["name"] }}
-              </mat-option>
-            </mat-autocomplete>
+        <mat-form-field appearance="fill">
+          <mat-label>Live In</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="liveIn"
+            required
+            [matAutocomplete]="autoOption"
+          />
+          <mat-autocomplete #autoOption="matAutocomplete">
+            <mat-option
+              *ngFor="let country of filteredCountries$ | async as countries"
+              value="{{ country['name'] }}"
+            >
+              {{ country["name"] }}
+            </mat-option>
+          </mat-autocomplete>
 
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
-              error["liveIn"]
-            }}</mat-error>
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+            error["liveIn"]
+          }}</mat-error>
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutGap="5px" formGroupName="phoneGroup">
+          <mat-form-field fxFlex="15%" appearance="fill">
+            <mat-label>code</mat-label>
+            <input matInput type="text" readonly formControlName="countryCode" />
           </mat-form-field>
 
-          <div fxLayout="row" fxLayoutGap="5px" formGroupName="phoneGroup">
-            <mat-form-field fxFlex="15%" appearance="fill">
-              <mat-label>code</mat-label>
-              <input
-                matInput
-                type="text"
-                formControlName="countryCode"
-                readonly
-                value="{{ (countryCode$ | async)?.dial_code }}"
-              />
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" fxFlex="85%">
-              <mat-label>Phone Number</mat-label>
-              <input
-                matInput
-                type="tel"
-                formControlName="phoneNumber"
-                placeholder="xxx-xxx-xxxx"
-              />
-              <mat-error class="error" *ngIf="errorMessage$ | async as error">
-                {{ error["phoneNumber"] }}
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <mat-form-field appearance="fill">
-            <mat-label>Age</mat-label>
+          <mat-form-field appearance="fill" fxFlex="85%">
+            <mat-label>Phone Number</mat-label>
             <input
               matInput
-              type="text"
-              placeholder="10+"
-              formControlName="age"
+              type="tel"
+              formControlName="phoneNumber"
+              placeholder="xxx-xxx-xxxx"
             />
             <mat-error class="error" *ngIf="errorMessage$ | async as error">
-              {{ error["age"] }}
+              {{ error["phoneNumber"] }}
             </mat-error>
           </mat-form-field>
+        </div>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Genre</mat-label>
-            <mat-select  matNativeControl formControlName="genre">
-              <mat-option value="1">Male</mat-option>
-              <mat-option value="2">Female</mat-option>
-            </mat-select>
-            <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
-              error["genre"]
-            }}</mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Age</mat-label>
+          <input matInput type="text" placeholder="10+" formControlName="age" />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            {{ error["age"] }}
+          </mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Join As</mat-label>
-            <mat-select value=" " matNativeControl formControlName="roles">
-              <mat-option value=" ">User</mat-option>
-              <mat-option value="producer">Artist</mat-option>
-              <mat-option value="organization">Organization</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button
+        <mat-form-field appearance="fill">
+          <mat-label>Genre</mat-label>
+          <mat-select matNativeControl formControlName="genre">
+            <mat-option value="1">Male</mat-option>
+            <mat-option value="2">Female</mat-option>
+          </mat-select>
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+            error["genre"]
+          }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Join As</mat-label>
+          <mat-select value=" " matNativeControl formControlName="roles">
+            <mat-option value=" ">User</mat-option>
+            <mat-option value="producer">Artist</mat-option>
+            <mat-option value="organization">Organization</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button
           type="button"
-            mat-flat-button
-            class="btn"
-            color="primary"
-            (click)="hideCard = !hideCard"
-          >
-            Back
-          </button>
-          <button
-            type="submit"
-            mat-flat-button
-            class="btn"
-            color="primary"
-            [disabled]="signUpForm.invalid"
-          >
-            Submit
-          </button>
-        </form>
-      </mat-card-content>
-    </mat-card>
+          mat-flat-button
+          class="btn"
+          color="primary"
+          (click)="hideCard = !hideCard"
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          mat-flat-button
+          class="btn"
+          color="primary"
+          [disabled]="signUpForm.invalid"
+        >
+          Submit
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>
