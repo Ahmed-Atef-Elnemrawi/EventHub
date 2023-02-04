@@ -1,8 +1,10 @@
+
 import { createReducer, on } from '@ngrx/store';
 import { TokenDto, UserProfile } from '../models';
-import * as AuthActions from '../state/actions';
+import { ProfilePageActions, UserApiActions } from './actions';
 
 export interface UserState {
+  userId: string;
   tokenDto: TokenDto;
   userProfile: UserProfile;
   error: string;
@@ -11,12 +13,12 @@ export interface UserState {
 }
 
 const initialState: UserState = {
+  userId: '',
   tokenDto: {
     accessToken: '',
     refreshToken: '',
   },
   userProfile: {
-    id: '',
     firstName: '',
     lastName: '',
     userName: '',
@@ -25,7 +27,6 @@ const initialState: UserState = {
     email: '',
     phoneNumber: '',
     country: '',
-    profilePicture: '',
   },
 
   error: '',
@@ -35,25 +36,25 @@ const initialState: UserState = {
 
 export const authReducer = createReducer<UserState>(
   initialState,
-  on(AuthActions.login, (state, action) => {
+  on(UserApiActions.login, (state, action) => {
     return {
       ...state,
       message: 'login',
+      error: ''
     };
   }),
 
-  on(AuthActions.loginSuccess, (state, action) => {
+  on(UserApiActions.loginSuccess, (state, action) => {
     return {
       ...state,
-      tokenDto: action.authResponse.tokenDto,
-      userProfile: action.authResponse.userProfile,
+      tokenDto: action.token,
       isAuthenticated: true,
       message: 'login success',
       error: '',
     };
   }),
 
-  on(AuthActions.loginFailure, (state, action) => {
+  on(UserApiActions.loginFailure, (state, action) => {
     return {
       ...state,
       error: action.error,
@@ -61,22 +62,51 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.logout, (state) => {
+  on(UserApiActions.loadUser, (state) => {
     return {
       ...state,
-      message: 'logout',
+      message: 'load user',
+      error: ''
     };
   }),
 
-  on(AuthActions.logoutSuccess, (state) => {
+  on(UserApiActions.loadUserSuccess, (state, action) => {
     return {
       ...state,
+      error: '',
+      userProfile: action.profile,
+      message: 'load user success',
+      isAuthenticated: true,
+      userId: action.userId,
+    };
+  }),
+
+  on(UserApiActions.loadUserFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error,
+      message: 'load user failed',
+      isAuthenticated: false,
+    };
+  }),
+
+  on(UserApiActions.logout, (state) => {
+    return {
+      ...state,
+      message: 'logout',
+      error: ''
+    };
+  }),
+
+  on(UserApiActions.logoutSuccess, (state) => {
+    return {
+      ...state,
+      userId: '',
       tokenDto: {
         accessToken: '',
         refreshToken: '',
       },
       userProfile: {
-        id: '',
         firstName: '',
         lastName: '',
         userName: '',
@@ -85,14 +115,14 @@ export const authReducer = createReducer<UserState>(
         email: '',
         phoneNumber: '',
         country: '',
-        profilePicture: '',
       },
+      isAuthenticated: false,
       message: 'logout success',
       error: '',
     };
   }),
 
-  on(AuthActions.logoutFailure, (state) => {
+  on(UserApiActions.logoutFailure, (state) => {
     return {
       ...state,
       message: 'logout cancelled',
@@ -100,13 +130,13 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.signup, (state) => {
+  on(UserApiActions.signup, (state) => {
     return {
       ...state,
     };
   }),
 
-  on(AuthActions.signupSuccess, (state) => {
+  on(UserApiActions.signupSuccess, (state) => {
     return {
       ...state,
       message: 'signup success',
@@ -114,7 +144,7 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.signupFailure, (state, action) => {
+  on(UserApiActions.signupFailure, (state, action) => {
     return {
       ...state,
       error: action.error,
@@ -122,13 +152,13 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.forgotPassword, (state) => {
+  on(UserApiActions.forgotPassword, (state) => {
     return {
       ...state,
     };
   }),
 
-  on(AuthActions.forgotPasswordSuccess, (state) => {
+  on(UserApiActions.forgotPasswordSuccess, (state) => {
     return {
       ...state,
       message: 'forgot password request success',
@@ -136,7 +166,7 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.forgotPasswordFailure, (state, action) => {
+  on(UserApiActions.forgotPasswordFailure, (state, action) => {
     return {
       ...state,
       error: action.error,
@@ -144,13 +174,13 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.resetPassword, (state) => {
+  on(UserApiActions.resetPassword, (state) => {
     return {
       ...state,
     };
   }),
 
-  on(AuthActions.resetPasswordSuccess, (state) => {
+  on(UserApiActions.resetPasswordSuccess, (state) => {
     return {
       ...state,
       message: 'reset password success',
@@ -158,11 +188,38 @@ export const authReducer = createReducer<UserState>(
     };
   }),
 
-  on(AuthActions.resetPasswordFailure, (state, action) => {
+  on(UserApiActions.resetPasswordFailure, (state, action) => {
     return {
       ...state,
       message: 'reset password success',
       error: action.error,
     };
-  })
+  }),
+
+  on(UserApiActions.updateUserProfile, (state) => {
+    return {
+      ...state,
+    };
+  }),
+
+  on(UserApiActions.UpdateUserProfileSuccess, (state, action) => {
+    return {
+      ...state,
+      userProfile: action.userProfile,
+      message: 'update user profile success',
+      error: '',
+    };
+  }),
+
+  on(UserApiActions.updateUserProfileFailure, (state, action) => {
+    return {
+      ...state,
+      message: 'update user profile failed',
+      error: action.error,
+    };
+  }),
+
+
+
+
 );
