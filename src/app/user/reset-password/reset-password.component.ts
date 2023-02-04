@@ -6,6 +6,7 @@ import {
   ViewChildren,
   ElementRef,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -17,10 +18,17 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { debounceTime, fromEvent, merge, Observable, Subject } from 'rxjs';
+import {
+  debounceTime,
+  fromEvent,
+  merge,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { State } from 'src/app/state/state';
-import { AuthService } from '../auth.service';
+import { UserApiActions } from '../state/actions';
 import { ResetPasswordDto, resetPasswordValidationMessages } from '../models';
 import { getError } from '../state';
 import * as AuthActions from '../state/actions';
@@ -43,33 +51,44 @@ function compare(control: AbstractControl): { [key: string]: boolean } | null {
   styleUrls: ['./reset-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResetPasswordComponent implements OnInit, AfterViewInit {
+export class ResetPasswordComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChildren('FormControlName') FormInputElements!: ElementRef[];
 
   backendErrors$!: Observable<string>;
-
   resetPasswordForm!: FormGroup;
   validationErrors: { [key: string]: string } = {};
   hidePassword = true;
   hideConfirm = true;
   genericValidators!: GenericValidator;
+  private destroyed$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private store: Store<State>,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.genericValidators = new GenericValidator(
       resetPasswordValidationMessages
     );
   }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
   ngAfterViewInit(): void {
     const inputBlurs$: Observable<any>[] = this.FormInputElements.map(
-      (inputElement) => fromEvent(inputElement.nativeElement, 'blur')
+      (inputElement) =>
+        fromEvent(inputElement.nativeElement, 'blur').pipe(
+          takeUntil(this.destroyed$)
+        )
     );
 
     merge(this.resetPasswordForm.valueChanges, inputBlurs$)
-      .pipe(debounceTime(500))
+      .pipe(debounceTime(500), takeUntil(this.destroyed$))
       .subscribe({
         next: () => {
           this.validationErrors = this.genericValidators.processMessages(
@@ -106,7 +125,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
       email,
     };
 
-    this.store.dispatch(AuthActions.resetPassword({ resetPasswordDto }));
+    this.store.dispatch(UserApiActions.resetPassword({ resetPasswordDto }));
     this.backendErrors$ = this.store.select(getError);
   };
 }

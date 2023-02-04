@@ -8,7 +8,7 @@ import { State } from 'src/app/state/state';
 import { AuthService } from '../auth.service';
 import { ForgotPasswordDto } from '../models';
 import { getError } from '../state';
-import * as AuthActions from '../state/actions'
+import { UserApiActions } from '../state/actions';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,7 +21,7 @@ export class ForgotPasswordComponent implements OnInit {
   isSuccess: boolean = false;
   validator!:GenericValidator;
   validationErrors : {[key: string]: string} = {};
- backendError$! : Observable<string>;
+  backendError$! : Observable<string>;
 
   constructor(private fb: FormBuilder, private store: Store<State>) {
 
@@ -39,8 +39,7 @@ export class ForgotPasswordComponent implements OnInit {
       resetPasswordClientURI: 'https://localhost:4200/users/reset-password',
     };
 
-    this.store.dispatch(AuthActions.forgotPassword({forgotPasswordDto}))
+    this.store.dispatch(UserApiActions.forgotPassword({ forgotPasswordDto }));
     this.backendError$ = this.store.select(getError);
-
-  }
+}
 }
