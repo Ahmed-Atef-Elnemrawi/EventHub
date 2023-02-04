@@ -1,0 +1,125 @@
+<div class="container">
+  <mat-card class="mat-elevation-z3">
+    <form
+      (submit)="onSubmit()"
+      [formGroup]="editForm"
+      fxLayout="column"
+      fxLayoutGap="1rem"
+      fxLayoutAlign="center"
+      ngStyle.gt-xs="padding:3rem"
+      ngStyle.sm="padding: 1rem"
+      ngStyle.xs="padding-block:1.5rem"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" formControlName="firstName" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["firstName"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" formControlName="lastName" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["lastName"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>User Name</mat-label>
+        <input matInput type="text" formControlName="userName" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["userName"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Age</mat-label>
+        <input matInput type="text" formControlName="age" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["age"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["email"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Genre</mat-label>
+        <mat-select formControlName="genre">
+          <mat-option value="1">Male</mat-option>
+          <mat-option value="2">Female</mat-option>
+        </mat-select>
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["genre"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Country</mat-label>
+        <input
+          type="text"
+          matInput
+          formControlName="liveIn"
+          required
+          [matAutocomplete]="autoOption"
+        />
+        <mat-autocomplete #autoOption="matAutocomplete">
+          <mat-option
+            *ngFor="let country of filteredCountries$ | async as countries"
+            value="{{ country['name'] }}"
+          >
+            {{ country["name"] }}
+          </mat-option>
+        </mat-autocomplete>
+
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">{{
+          error["liveIn"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutGap="5px" formGroupName="phoneGroup">
+        <mat-form-field fxFlex="15%" appearance="fill">
+          <mat-label>code</mat-label>
+          <input matInput type="text" readonly formControlName="countryCode" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex="85%">
+          <mat-label>Phone Number</mat-label>
+          <input
+            matInput
+            type="tel"
+            formControlName="phoneNumber"
+            placeholder="xxx-xxx-xxxx"
+          />
+          <mat-error class="error" *ngIf="errorMessage$ | async as error">
+            {{ error["phoneNumber"] }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Age</mat-label>
+        <input matInput type="text" placeholder="10+" formControlName="age" />
+        <mat-error class="error" *ngIf="errorMessage$ | async as error">
+          {{ error["age"] }}
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        disabled="{{ editForm.pristine || editForm.invalid }}"
+      >
+        Submit
+      </button>
+    </form>
+  </mat-card>
+</div>
