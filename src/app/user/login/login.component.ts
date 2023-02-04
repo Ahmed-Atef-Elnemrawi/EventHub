@@ -6,16 +6,25 @@ import {
   ViewChildren,
   ElementRef,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { props, Store } from '@ngrx/store';
-import { debounceTime, fromEvent, map, merge, Observable, Subject } from 'rxjs';
+import {
+  debounceTime,
+  fromEvent,
+  map,
+  merge,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { State } from 'src/app/state/state';
 import { AuthService } from '../auth.service';
 import { AuthValidationMessages, UserForAuthDto } from '../models';
-import { getError } from '../state';
-import * as AuthActions from '../state/actions';
+import { getError, getIsAuthenticated } from '../state';
+import { UserApiActions } from '../state/actions';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +32,7 @@ import * as AuthActions from '../state/actions';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('FromControlName') FormInputElements!: ElementRef[];
 
   backendErrors$ = new Observable<string>();
@@ -32,12 +41,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
   hidePassword: boolean = true;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private store: Store<State>
-  ) {
+  private destroyed$ = new Subject<void>();
+
+  constructor(private fb: FormBuilder, private store: Store<State>) {
     this.genericValidator = new GenericValidator(AuthValidationMessages);
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -63,11 +74,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    let userCredentials = { ...this.loginForm.value} as UserForAuthDto
+    let userCredentials = { ...this.loginForm.value } as UserForAuthDto;
 
+    this.store.dispatch(UserApiActions.login({ user: userCredentials }));
 
-    this.store.dispatch(AuthActions.login({ user: userCredentials }));
+    //load the user
+    this.store
+      .select(getIsAuthenticated)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((isAuthenticated) => {
+        if (isAuthenticated === true)
+          return this.store.dispatch(UserApiActions.loadUser());
+      });
+
     this.backendErrors$ = this.store.select(getError);
-  
   }
 }
