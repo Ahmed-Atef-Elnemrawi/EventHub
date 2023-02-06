@@ -37,7 +37,9 @@ export class AuthGuard implements CanActivate, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(res => this.result = res);
 
-    this.router.navigateByUrl('users/login')
+    if(!this.result)
+      this.router.navigateByUrl('users/login')
+      
     return this.result;
   }
 }
