@@ -27,31 +27,40 @@
     <div class="sidenav-content" fxLayout="column">
       <button
         id="btn"
+        type="button"
         mat-flat-button
-        routerLink="/users/{{ userName | async }}"
-        routerLinkActive="btn"
+        routerLink="/users/{{ userId$ | async }}/events-I-attend"
+        routerLinkActive="active"
+      
       >
         Events I Attend
       </button>
       <button
+      type="button"
         id="btn"
         mat-flat-button
-        routerLink="/users/{{ userName | async }}"
+        routerLink="/users/{{ userId$ | async }}/who-Im-follow"
+                routerLinkActive="active"
+
       >
         Who I'm Follow
       </button>
       <button
         id="btn"
         mat-flat-button
-        routerLink="/users/{{ userName | async }}"
+        (click)="loadPage()"
+        *ngIf="(userRole$ | async) === 'Producer'"
+                routerLinkActive="active"
+
       >
         My Page
       </button>
       <button
         id="btn"
-        (click)="onClick($event)"
         mat-flat-button
-        routerLink="/users/{{ userName | async }}/edit"
+        routerLink="/users/{{ userId$ | async }}/edit"
+                routerLinkActive="active"
+
       >
         Edit My Profile
       </button>
@@ -82,26 +91,47 @@
   </button>
   <div class="sidenav-xs">
     <div class="sidenav-content" fxLayout="column">
-      <button type="button" (click)="toggle()" mat-flat-button>
+      <button
+        type="button"
+        (click)="toggle()"
+        mat-flat-button
+        routerLink="/users/{{ userName$ | async }}/events-I-attend"
+        routerLinkActive="true"
+      >
+        Events I Attend
+      </button>
+      <button
+        type="button"
+        (click)="toggle()"
+        mat-flat-button
+        routerLink="/users/{{ userName$ | async }}/who-Im-follow"
+      >
         Who I'm Follow
       </button>
       <button
         type="button"
         (click)="toggle()"
         mat-flat-button
-        routerLink=""
-        routerLinkActive
+        (click)="loadPage()"
+        *ngIf="(userRole$ | async) == 'Producer'"
       >
-        Event I Attends
+        My Page
       </button>
-      <button type="button" (click)="toggle()" mat-flat-button>My Page</button>
       <button
         type="button"
         (click)="toggle()"
         mat-flat-button
-        routerLink="/users/{{ userName | async }}/edit"
+        routerLink="/users/{{ userName$ | async }}/edit"
       >
         Edit Profile
+      </button>
+      <button
+        id="btn"
+        mat-flat-button
+        (click)="loadPage()"
+        *ngIf="(userRole$ | async) == 'Producer'"
+      >
+        My Page
       </button>
       <button type="button" mat-flat-button (click)="logout()">Log Out</button>
     </div>

@@ -1,52 +1,61 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnInit,
-  QueryList,
-  Renderer2,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { fromEvent, Observable, reduce } from 'rxjs';
-import { State } from 'src/app/state/state';
-import { UserApiActions } from '../state/actions';
-import { UserProfile } from '../models';
-import { getUserName, getUserProfile } from '../state';
+import { Observable } from 'rxjs';
+import { State } from 'src/app/state/app.state';
+import { PageType, UserProfile } from '../models';
+
+
+import { Router } from '@angular/router';
+import { AuthAPIAction } from '../state/actions';
+import { userSelectors } from '../state';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
+  changeDetection:ChangeDetectionStrategy.OnPush
+
 })
-export class ProfileComponent implements OnInit, AfterViewInit {
+export class ProfileComponent implements OnInit{
   @ViewChild('sidenav') SideNav!: ElementRef;
+  userName$!: Observable<string>;
+  userProfile$!: Observable<UserProfile>;
+  userRole$!: Observable<string>;
+  userId$!: Observable<string>;
+  artistId$!: Observable<string>;
+  artistPageId$!: Observable<string>;
+  userPageType$!: Observable<string>;
 
-  constructor(private store: Store<State>, private render: Renderer2) {}
+  constructor(private store: Store<State>, private router: Router) {}
 
-  ngAfterViewInit(): void {
-    let buttons = document.querySelectorAll('#btn');
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', function (e: Event) {
-        buttons.forEach((btn) => btn.classList.remove('btn'));
-        btn.classList.add('btn');
-      });
-    });
-  }
-  userName!: Observable<string>;
-  userProfile!: Observable<UserProfile>;
 
   ngOnInit(): void {
-    this.userName = this.store.select(getUserName);
-    this.userProfile = this.store.select(getUserProfile);
+    this.userName$ = this.store.select(userSelectors.getUserName);
+    this.userRole$ = this.store.select(userSelectors.getUserRole);
+    this.userId$ = this.store.select(userSelectors.getUserId);
+    this.artistId$ = this.store.select(userSelectors.getUserPageEntityId);
   }
 
   toggle = () =>
     this.SideNav.nativeElement.classList.toggle('sidenav-container_show');
 
-  logout = () => this.store.dispatch(UserApiActions.logout());
+  logout = () => this.store.dispatch(AuthAPIAction.logout());
 
-  onClick(event: Event) {}
+  loadPage = () => {
+    let artistPageId = localStorage.getItem('entityId');
+    let pageType = +JSON.parse(localStorage.getItem('pageType')!);
+
+    if (artistPageId !== null && pageType === PageType.artist) {
+      this.router.navigateByUrl(`artists/${artistPageId}`);
+      return;
+    } else this.router.navigateByUrl('artists/0/add');
+  };
+
 }
