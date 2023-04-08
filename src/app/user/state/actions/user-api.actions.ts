@@ -1,32 +1,17 @@
 import { createAction, props } from '@ngrx/store';
 import {
-  ForgotPasswordDto,
-  ResetPasswordDto,
-  TokenDto,
-  UserForAuthDto,
-  UserForRegistrationDto,
+  UserPage,
   UserProfile,
+  UserProfileForManipulation,
 } from '../../models';
+import { ShapedEntity } from 'src/app/artist-home/models';
 
-export const login = createAction(
-  '[User] Login User',
-  props<{ user: UserForAuthDto }>()
-);
 
-export const loginSuccess = createAction(
-  '[User] Login Success',
-  props<{ token: TokenDto }>()
-);
-
-export const loginFailure = createAction(
-  '[User] Login Failed',
-  props<{ error: string }>()
-);
 
 export const loadUser = createAction('[User] Load User');
 export const loadUserSuccess = createAction(
   '[User] Load User Success',
-  props<{ profile: UserProfile, userId: string }>()
+  props<{ profile: UserProfile; userId: string; userRole: string }>()
 );
 
 export const loadUserFailure = createAction(
@@ -34,60 +19,15 @@ export const loadUserFailure = createAction(
   props<{ error: string }>()
 );
 
-export const logout = createAction('[User] Logout User');
-export const logoutSuccess = createAction('[User] Logout Success');
-export const logoutFailure = createAction('[User] Logout Failed');
-
-export const authenticate = createAction('[User] Authenticate User ');
-export const authenticatedSuccess = createAction('[User] Authenticate Success');
-export const authenticatedFailure = createAction('[User] Authenticate Failed');
-
-export const signup = createAction(
-  '[User] Signup User',
-  props<{ user: UserForRegistrationDto }>()
-);
-
-export const signupSuccess = createAction('[User] Signup Success');
-
-export const signupFailure = createAction(
-  '[User] Signup Failed',
-  props<{ error: string }>()
-);
-
-export const forgotPassword = createAction(
-  '[User] Forgot Password Request',
-  props<{ forgotPasswordDto: ForgotPasswordDto }>()
-);
-
-export const forgotPasswordSuccess = createAction(
-  '[User] Forgot Password Request Success'
-);
-
-export const forgotPasswordFailure = createAction(
-  '[User] Forgot Password Request Failed',
-  props<{ error: string }>()
-);
-
-export const resetPassword = createAction(
-  '[User] reset password',
-  props<{ resetPasswordDto: ResetPasswordDto }>()
-);
-export const resetPasswordSuccess = createAction(
-  '[User] reset password success'
-);
-export const resetPasswordFailure = createAction(
-  '[User] reset password failed',
-  props<{ error: string }>()
-);
 
 export const updateUserProfile = createAction(
   '[User] update user profile',
-  props<{ userProfile: UserProfile; userId: string }>()
+  props<{ userProfile: UserProfileForManipulation; userId: string }>()
 );
 
 export const UpdateUserProfileSuccess = createAction(
   '[User] update user profile success',
-  props<{ userProfile: UserProfile }>()
+  props<{ userProfile: UserProfileForManipulation }>()
 );
 
 export const updateUserProfileFailure = createAction(
@@ -95,3 +35,63 @@ export const updateUserProfileFailure = createAction(
   props<{ error: string }>()
 );
 
+export const loadUserPage = createAction(
+  '[user] load user page',
+  props<{ userPageId: string }>()
+);
+
+export const loadUserPageSuccess = createAction(
+  '[User] load user page success',
+  props<{ userPage: UserPage }>()
+);
+
+export const LoadUserPageFailure = createAction(
+  '[User] load user page failed',
+  props<{ error: string }>()
+);
+
+export const ResetUserProfile = createAction(
+  '[User] reset user'
+)
+
+export const
+loadArtistsIFollow = createAction(
+  '[User] load artists I follow',
+  props<{userId:string, fields:'FirstName,LastName,JobTitle'}>()
+)
+export const
+loadArtistsIFollowSuccess = createAction(
+  '[User] load artists I follow success',
+  props<{artists: ShapedEntity[]}>()
+)
+export const
+loadArtistsIFollowFailure = createAction(
+  '[User] load artists I follow failed',
+  props<{error:string}>()
+)
+
+export const loadEventsIAttend = createAction(
+  '[user] load events I attend',
+  props<{userId:string}>()
+)
+export const loadEventsIAttendSuccess = createAction(
+  '[user] load events I attend success',
+  props<{events: ShapedEntity[]}>()
+)
+export const loadEventsIAttendFailure = createAction(
+  '[user] load events I attend failed',
+  props<{error:string}>()
+)
+
+export const loadEventsIAttendDates = createAction(
+  '[user] load events I attend dates',
+  props<{userId: string}>()
+)
+export const loadEventsIAttendDatesSuccess = createAction(
+  '[user] load events I attend dates success',
+  props<{dates: Date[]}>()
+)
+export const loadEventsIAttendDatesFailure = createAction(
+  '[user] load events I attend dates failed',
+  props<{error: string}>()
+)
