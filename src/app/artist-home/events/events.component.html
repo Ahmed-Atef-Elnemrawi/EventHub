@@ -1,0 +1,178 @@
+<div class="content" fxLayout="column" fxLayoutAlign="center">
+  <mat-card
+    class="header mat-elevation-z0"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+    style="padding-inline: 1rem; margin-block-start: 0"
+  >
+    <div
+      fxLayout="row"
+      fxLayoutGap="1rem"
+      fxFlexAlign="start"
+      class="event-status-bar"
+    >
+      <div class="event-status-item">
+        <p class="count">{{ PagingMetaData.UpcomingCount }}</p>
+        <p class="title">Up Coming</p>
+      </div>
+      <div class="event-status-item">
+        <p class="count">{{ PagingMetaData.TotalCount }}</p>
+        <p class="title">Total Events</p>
+      </div>
+    </div>
+    <div class="filter-sort-options" fxFlexAlign="center">
+      <button
+        type="button"
+        [matMenuTriggerFor]="sort_options"
+        mat-icon-button
+        title="sort by"
+      >
+        <mat-icon fontIcon="sort"></mat-icon>
+      </button>
+
+      <mat-menu #sort_options>
+        <button mat-menu-item (click)="sortBy('name asc')">Name Asc</button>
+        <button mat-menu-item (click)="sortBy('name desc')">Name desc</button>
+      </mat-menu>
+
+      <button
+        mat-icon-button
+        type="button"
+        title="filter list"
+        [mat-menu-trigger-for]="filterList"
+      >
+        <mat-icon fontIcon="filter_list"></mat-icon>
+      </button>
+      <mat-menu #filterList>
+        <button mat-menu-item (click)="filterBy('upComing')">UpComing</button>
+        <button mat-menu-item (click)="filterBy('last24hours')">
+          Last 24 hours
+        </button>
+        <button mat-menu-item (click)="filterBy('lastWeek')">Last week</button>
+        <button mat-menu-item (click)="filterBy('lastMonth')">
+          Last Month
+        </button>
+      </mat-menu>
+    </div>
+  </mat-card>
+
+  <div
+    class="add-btn-container"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    *ngIf="CurrentUserRole === 'Producer' && RouteArtistId! === ActualArtistId!"
+  >
+    <button
+      mat-button
+      type="button"
+      class="add-btn"
+      [routerLink]="[{ outlets: { secondary: ['events', '0', 'edit'] } }]"
+    >
+      New <mat-icon fontIcon="add"></mat-icon>
+    </button>
+  </div>
+
+  <mat-card
+    *ngFor="let event of CurrentArtistEvents"
+    a
+    class="mat-elevation-z0 event-wrapper"
+
+    fxFlexAlign="center"
+  >
+    <!-- <div class="header" fxLayout="row" fxLayoutAlign="space-between">
+      <p class="date-time">{{ event.entity?.Date | date : "medium" }}</p>
+      <p class="days-left">{{ event.entity?.Date | daysLeft }}</p>
+    </div> -->
+
+    <div fxLayout="column" fxLayoutGap="1rem">
+      <div class="date-time" fxFlexAlign="flex-start">
+        <div class="date">
+          <div class="day">{{ event.entity?.Date | date : "dd" }}</div>
+          <div style="font-weight: 600; font-size: 14px">
+            <div class="">{{ event.entity?.Date | date : "EEEE" }}</div>
+            <div class="">{{ event.entity?.Date | date : "LLL, YYYY" }}</div>
+          </div>
+        </div>
+        <div class="time">{{ event.entity?.Date | date : "hh:mm a" }}</div>
+      </div>
+
+      <mat-card-content
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlexAlign="center"
+      >
+        <mat-card-title> {{ event.entity?.Name | camelCase }} </mat-card-title>
+        <mat-card-subtitle> Course </mat-card-subtitle>
+      </mat-card-content>
+    </div>
+    <mat-progress-bar value="20"></mat-progress-bar>
+    <p class="progress-status"><span>5</span> Person Have To Attend</p>
+
+    <button class=" event-state" *ngIf="event.entity?.EventState === 'Finished'">Finished</button>
+
+    <mat-card-actions
+      class="btn-group"
+      *ngIf="RouteArtistId! !== ActualArtistId!"
+    >
+      <button
+        type="button"
+        mat-flat-button
+        color="primary"
+        [routerLink]="[{ outlets: { secondary: ['events', event.id] } }]"
+      >
+        More Details
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        color="primary"
+        [ngClass]="{'btn_disabled':event.entity?.EventState === 'Finished'}"
+        (click)="attend(event.id)"
+      >
+        Attend
+      </button>
+    </mat-card-actions>
+
+    <mat-card-actions
+      class="btn-group"
+      *ngIf="
+        CurrentUserRole === 'Producer' && RouteArtistId! === ActualArtistId!
+      "
+    >
+      <button
+        type="button"
+        mat-flat-button
+        class="edit-btn"
+        [routerLink]="[
+          { outlets: { secondary: ['events', event.id, 'edit'] } }
+        ]"
+        color="primary"
+        [ngClass]="{'btn_disabled':event.entity?.EventState === 'Finished'}"
+      >
+        Edit
+      </button>
+
+      <button
+        mat-flat-button
+        type="button"
+        class="del-btn"
+        color="accent"
+        (click)="delete(event.id)"
+      >
+        DEL
+      </button>
+    </mat-card-actions>
+
+  </mat-card>
+
+  <mat-paginator
+    class="paginator-container"
+    [length]="PagingMetaData['TotalCount']"
+    (page)="handlePagination($event)"
+    [pageSize]="5"
+    color="warn"
+    [pageSizeOptions]="[5, 10, 15, 20]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</div>

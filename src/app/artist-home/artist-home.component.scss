@@ -1,0 +1,19 @@
+
+.container {
+  width: 100%;
+  height: fit-content;
+  padding-block: 3rem;
+  gap: 3rem;
+}
+
+.container-gt-xs {
+  padding: 3rem;
+}
+
+.container-xs {
+  padding: 1rem
+}
+
+.container-sm {
+  padding: 4rem
+}

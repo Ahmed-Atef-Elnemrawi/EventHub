@@ -1,0 +1,31 @@
+.edit-container{
+height: 100%;
+  width: 100vw;
+  z-index: 1000;
+  background-color: rgb(0, 0, 0, .5);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+mat-card{
+  padding-inline: 2em;
+  height: 550px;
+  overflow: auto;
+}
+
+.medium{
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  gap: 1em;
+ height: 30px;
+
+  .radio{
+    margin-inline-end: 1em;
+  }
+}
+
+.btn{
+  margin-block-end: .6em;
+}

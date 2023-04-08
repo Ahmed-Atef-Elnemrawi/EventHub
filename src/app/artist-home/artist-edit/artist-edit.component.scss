@@ -1,0 +1,16 @@
+.edit-container{height: 100%;
+  width: 100vw;
+  z-index: 1000;
+  background-color: rgb(0, 0, 0, .5);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+button{
+  margin-bottom: .5em;
+}
+
+mat-card{
+  overflow: auto;
+}

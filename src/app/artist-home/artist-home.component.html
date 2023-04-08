@@ -1,0 +1,54 @@
+<button
+  mat-mini-fab
+  class="mat-elevation-z0"
+  color="primary"
+  style="margin-inline: .5rem"
+  type="button"
+  [routerLink]="['/users', userId, 'events-I-attend']"
+  title="back"
+>
+  <mat-icon fontIcon="arrow_back"></mat-icon>
+</button>
+
+<div
+  class="container"
+  fxLayout.gt-xs="row"
+  fxLayout.xs="column"
+  fxLayout.sm="column"
+  ngClass.gt-xs="container-gt-xs"
+  ngClass.xs="container-xs"
+  ngClass.sm="container-sm"
+  *ngIf="artistHomeData$ | async as data"
+>
+  <app-artist-events
+    fxFlex.gt-xs="60%"
+    fxFlex.xs="100%"
+    fxFlexOrder.sm="2"
+    fxFlexOrder.xs="2"
+    fxFlexOrder.gt-xs="1"
+    [CurrentArtistEvents]="data['events$'] | async"
+    [CurrentUserProfile]="data['userProfile$'] | async"
+    [PagingMetaData]="data['pagingMetaData$'] | async"
+    [CurrentUserRole]="data['userRole$'] | async"
+    [ActualUserId]="userId!"
+    [RouteArtistId]="routeArtistId"
+    [ActualArtistId]="actualArtistId"
+  ></app-artist-events>
+
+  <app-artist-about
+    [CurrentArtist]="data['artist$'] | async"
+    [CurrentUserRole]="data['userRole$'] | async"
+    [ActualUserId]="userId!"
+    [CurrentUserProfile]="data['userProfile$'] | async"
+    [RouteArtistId]="routeArtistId"
+    [ActualArtistId]="actualArtistId"
+    [IsUserFollowsArtist]="data['isFollower$'] | async"
+    [ArtistFollowersCount]="data['artistFollowersCount$'] | async"
+    fxFlex.gt-xs="40%"
+    fxFlex.xs="100%"
+    fxFlexOrder.sm="1"
+    fxFlexOrder.xs="1"
+    fxFlexOrder.gt-xs="2"
+  ></app-artist-about>
+</div>
+<router-outlet name="secondary"></router-outlet>

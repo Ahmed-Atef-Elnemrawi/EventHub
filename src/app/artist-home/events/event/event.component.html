@@ -1,0 +1,49 @@
+<div id="details-container" class="details-container">
+  <mat-card *ngIf="currentEvent$ | async as event">
+    <mat-card-content>
+      <div fxLayout="row">
+        <p class="title">Name:</p>
+        <p class="content">{{ event.entity?.Name }}</p>
+      </div>
+      <div fxLayout="row">
+        <p class="title">Medium:</p>
+        <p class="content">{{ "" }}</p>
+      </div>
+      <div fxLayout="row">
+        <p class="title">category:</p>
+        <p class="content">{{ event.entity?.Category }}</p>
+      </div>
+      <div fxLayout="row">
+        <p class="title">date:</p>
+        <p class="content">{{ event.entity?.Date | date: 'medium' }}</p>
+      </div>
+      <div fxLayout="row" *ngIf="event.entity?.Url as url">
+        <p class="title">URL:</p>
+        <p class="content">{{ url }}</p>
+      </div>
+      <div fxLayout="row" *ngIf="event.entity?.Country as country">
+        <p class="title">Country:</p>
+        <p class="content">{{ country }}</p>
+      </div>
+      <div fxLayout="row" *ngIf="event.entity?.City as city">
+        <p class="title">City:</p>
+        <p class="content">{{ city }}</p>
+      </div>
+
+      <div fxLayout="column" class="description">
+        <p class="title">Description</p>
+        <p class="content">{{event.entity?.Description}}</p>
+      </div>
+    </mat-card-content>
+    <button
+      type="button"
+      class="close-btn"
+      mat-flat-button
+      color="primary"
+      (click)="back()"
+    >
+      Close
+    </button>
+  </mat-card>
+</div>
+

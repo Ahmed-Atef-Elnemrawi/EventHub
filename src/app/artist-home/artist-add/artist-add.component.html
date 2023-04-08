@@ -1,0 +1,37 @@
+<div class="edit-container" fxLayout="column" fxLayoutAlign="stretch center">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Setup Your Page</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="addForm" (ngSubmit)="onSubmit()" fxLayout="column">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Job Title</mat-label>
+        <input type="text" matInput formControlName="jobTitle">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Bio</mat-label>
+        <textarea matInput cols="30" rows="3" formControlName="bio"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Facebook</mat-label>
+        <input type="text" matInput formControlName="facebook" placeholder="www.facebook.com/ahmed_atef">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Twitter</mat-label>
+        <input type="text" matInput formControlName="twitter" placeholder="www.twitter.com/ahmed_atef">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>LinkedIn</mat-label>
+        <input type="text" matInput formControlName="linkedIn" placeholder="www.linkedIn.com/ahmed_atef">
+      </mat-form-field>
+    <button type="submit" mat-flat-button color="primary" >Submit</button>
+    </form>
+  </mat-card>
+</div>
+

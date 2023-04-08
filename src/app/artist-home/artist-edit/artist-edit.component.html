@@ -1,0 +1,37 @@
+<div class="edit-container" fxLayout="column" fxLayoutAlign="center center">
+  <mat-card >
+    <mat-card-header *ngIf="backendError$ | async as error">
+      <mat-card-subtitle class="backend-error">{{error}}</mat-card-subtitle>
+    </mat-card-header>
+    <form [formGroup]="editForm" (ngSubmit)="submit()" fxLayout="column">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Job Title</mat-label>
+        <input type="text" matInput formControlName="jobTitle">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Bio</mat-label>
+        <textarea matInput cols="30" rows="3" formControlName="bio"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Facebook</mat-label>
+        <input type="text" matInput formControlName="facebook">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Twitter</mat-label>
+        <input type="text" matInput formControlName="twitter">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>LinkedIn</mat-label>
+        <input type="text" matInput formControlName="linkedIn">
+      </mat-form-field>
+
+    <button mat-flat-button color="accent" type="button" (click)="back()">Cancel</button>
+    <button type="submit" mat-flat-button color="primary" *ngIf="editForm.valid && !editForm.pristine">Submit</button>
+    </form>
+  </mat-card>
+</div>

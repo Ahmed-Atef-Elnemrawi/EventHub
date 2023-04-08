@@ -1,0 +1,129 @@
+<div fxLayout="column" fxLayoutGap=".6rem" class="about-container">
+  <mat-card class="mat-elevation-z0 card-sm" fxFlex="100%">
+    <div
+      class="header"
+      ngClass.sm="header.sm"
+      fxLayout="column"
+      fxLayoutAlign="space-between start"
+    >
+      <mat-card-header>
+        <img src="/assets/usr.jpg" alt="" mat-card-avatar />
+        <mat-card-title>{{
+          (CurrentArtist?.FirstName | camelCase) + " " + CurrentArtist?.LastName
+            | camelCase
+        }}</mat-card-title>
+        <mat-card-subtitle>{{
+          CurrentArtist?.JobTitle | camelCase
+        }}</mat-card-subtitle>
+
+        <div class="followers" title="followers">
+          <mat-icon fontIcon="person"></mat-icon>{{ ArtistFollowersCount }}
+        </div>
+
+        <button
+          mat-icon-button
+          (click)="follow()"
+          title="follow"
+          class="follow-btn"
+          color="primary"
+          *ngIf="ActualArtistId !== RouteArtistId && !IsUserFollowsArtist"
+        >
+          <mat-icon fontIcon="person_add"></mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          (click)="unfollow()"
+          title="unfollow"
+          class="unfollow-btn"
+          color="primary"
+          *ngIf="ActualArtistId !== RouteArtistId && IsUserFollowsArtist"
+        >
+          <mat-icon fontIcon="person_add_disabled"></mat-icon>
+        </button>
+      </mat-card-header>
+      <button
+        title="edit profile"
+        class="edit-btn"
+        mat-icon-button
+        color="warn"
+        type="button"
+        [routerLink]="[{ outlets: { secondary: ['edit'] } }]"
+        *ngIf="
+          CurrentUserRole === 'Producer' && RouteArtistId === ActualArtistId
+        "
+      >
+        <mat-icon fontIcon="edit"></mat-icon>
+      </button>
+
+      <div class="social" fxLayoutAlign="flex-end flex-end">
+        <a
+          href="https://{{ CurrentArtist?.Facebook }}"
+          *ngIf="CurrentArtist?.Facebook"
+          class="facebook"
+          ><img src="/assets/facebook.svg" alt="facebook" title="facebook"
+        /></a>
+        <a
+          href="https://{{ CurrentArtist?.Twitter }}"
+          *ngIf="CurrentArtist?.Twitter"
+          class="twitter"
+          ><img src="/assets/twitter.svg" alt="twitter" title="twitter"
+        /></a>
+        <a
+          href="https://{{ CurrentArtist?.LinkedIn }}"
+          *ngIf="CurrentArtist?.LinkedIn"
+          class="linkedIn"
+          ><img src="/assets/linkedin.svg" alt="linkedIn" title="linkedIn"
+        /></a>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card class="mat-elevation-z0 card-sm" fxFlex="100%">
+    <mat-card-content class="content" id="content">
+      <div class="bio">
+        <p class="about">About Me</p>
+        <p class="about-details">{{ CurrentArtist?.Bio }}</p>
+      </div>
+      <button id="more" mat-icon-button color="primary" class="more-btn">
+        more
+        <mat-icon fontIcon="more_horiz" matSuffix></mat-icon>
+      </button>
+      <div id="more-info" class="more-info hide">
+        <mat-card-subtitle>More Info</mat-card-subtitle>
+        <div class="info">
+          <div fxLayout="row" fxLayoutGap="1em">
+            <mat-icon
+              fontIcon="location_city"
+              color="warn"
+              class="info-title"
+            ></mat-icon>
+            <p>{{ CurrentArtist?.LiveIn | camelCase }}</p>
+          </div>
+          <div fxLayout="row" fxLayoutGap="1em">
+            <mat-icon
+              class="info-title"
+              fontIcon="emoji_emotions"
+              color="warn"
+            ></mat-icon>
+            <p>{{ CurrentArtist?.Genre | camelCase }}</p>
+          </div>
+        </div>
+        <mat-card-subtitle>Contact Info</mat-card-subtitle>
+        <address class="contact-info">
+          <div fxLayout="row" fxLayoutGap="1em">
+            <p class="contact-title">
+              <mat-icon fontIcon="mail_outline" color="warn"></mat-icon>
+            </p>
+            <p>{{ CurrentArtist?.Email }}</p>
+          </div>
+          <div fxLayout="row" fxLayoutGap="1em">
+            <p class="contact-title">
+              <mat-icon fontIcon="phone_enabled" color="warn"></mat-icon>
+            </p>
+            <p>{{ CurrentArtist?.PhoneNumber }}</p>
+          </div>
+        </address>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
