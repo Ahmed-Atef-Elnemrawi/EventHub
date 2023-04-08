@@ -5,36 +5,51 @@
     fxLayoutAlign="space-between"
     ngClass.xs="padding-sm"
   >
-    <div class="logo" fxFlexAlign="center"><span>Event</span>Hub</div>
+    <div class="logo" fxFlexAlign="end"><span>Event</span>Hub</div>
 
-    <mat-card
-      class="mat-elevation-z5 search-wrapper"
-      fxHide.xs
-      fxShow.gt-xs
-      title="search"
+    <div
       fxFlexAlign="center"
+      fxHide.xs
+      fxHide.sm
+      fxShow.gt-xs
+      style="width: 100%; max-width: 450px"
+      *ngIf="isAuthenticated$ | async"
     >
-      <form
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
-        [formGroup]="searchForm"
+      <mat-card
+        class="mat-elevation-z5 search-wrapper"
+        title="search"
       >
-        <mat-select value="event" formControlName="searchCategory">
-          <mat-option value="event" title="Event"
-            ><mat-icon fontIcon="event"></mat-icon> Event</mat-option
-          >
-          <mat-option value="org" title="organization">
-            <mat-icon fontIcon="business"></mat-icon> Org</mat-option
-          >
-          <mat-option value="artist" title="Artist">
-            <mat-icon fontIcon="person"></mat-icon> Artist</mat-option
-          >
-        </mat-select>
+        <form
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          [formGroup]="searchForm"
+        >
+          <mat-select value="event" formControlName="searchCategory">
+            <mat-option value="event" title="Event"
+              ><mat-icon fontIcon="event"></mat-icon> Event</mat-option
+            >
+            <mat-option value="artist" title="Artist">
+              <mat-icon fontIcon="person"></mat-icon> Artist</mat-option
+            >
+          </mat-select>
+          <input
+            matInput
+            class="search"
+            type="search"
+            formControlName="search"
+          />
+          <button mat-icon-button class="mat-elevation-z0">
+            <mat-icon fontIcon="search" matSuffix></mat-icon>
+          </button>
+        </form>
+      </mat-card>
 
-        <input matInput class="search" type="search" formControlName="search" />
-        <mat-icon fontIcon="search" matSuffix></mat-icon>
-      </form>
-    </mat-card>
+      <mat-card
+        [fxShow]="!!(searchResult$ |async)"
+        class="mat-elevation-z0 search-result"
+      >
+      </mat-card>
+    </div>
     <div
       class="app-header-right"
       fxLayout="row"
@@ -43,13 +58,6 @@
       ngStyle.gt-xs="margin-left:2em"
       *ngIf="isAuthenticated$ | async"
     >
-      <button class="mode">
-        <mat-icon
-          fontIcon="light_mode"
-          class="btn"
-          title="switch theme"
-        ></mat-icon>
-      </button>
 
       <button type="button" class="notifications btn">
         <mat-icon
@@ -63,7 +71,8 @@
       </button>
 
       <button
-        mat-fab
+        mat-card-avatar
+        mat-mini-fab
         color="primary"
         type="button"
         title="profile"
@@ -73,10 +82,19 @@
         {{ avatarName }}
       </button>
       <mat-menu #menu="matMenu" class="profile-menu">
-        <button mat-menu-item routerLink="users/profile">
-          {{ userName$ | async }}
+        <button mat-menu-item [routerLink]="['users',userId$ |async, 'events-I-attend']">
+          {{ userName$ | async | camelCase }}
         </button>
-        <mat-divider></mat-divider>
+
+        <button
+          mat-menu-item
+          title="Create Artist Page"
+          routerLink="artists/0/add"
+          *ngIf="!(isHaveAPage$ | async) && (userRole$ | async) === 'Producer'"
+        >
+          My Artist Page
+        </button>
+
         <button mat-menu-item (click)="logout()">Log Out</button>
       </mat-menu>
     </div>
@@ -91,15 +109,18 @@
         color="primary"
         class="btn"
         [routerLink]="['/users/login']"
+        style="padding-inline: 2.5rem; padding-block: 0.15rem; font-size: 16px"
+        ngStyle.xs="padding-inline:1.5rem"
       >
         Log In
       </button>
       <button
         mat-flat-button
+        color="accent"
         class="btn signUp-btn"
         [routerLink]="['users/signup']"
         fxHide.xs
-        fxHide.sm
+        style="padding-inline: 2.5rem; padding-block: 0.15rem; font-size: 16px"
       >
         Sign Up
       </button>
@@ -109,8 +130,10 @@
   <div fxLayout="column" fxLayoutAlign=" center center" style="padding: 1em">
     <mat-card
       class="mat-elevation-z0 search-wrapper-xs"
-      fxShow.gt-xs="true"
       fxShow.gt-xs="false"
+      fxShow.sm
+      fxShow.xs
+      *ngIf="isAuthenticated$ | async"
     >
       <form
         [formGroup]="searchForm"
@@ -134,5 +157,5 @@
       </form>
     </mat-card>
   </div>
-  <span fxFlex="2rem"></span>
+  <span fxFlex.gt-xs="2rem"></span>
 </div>
