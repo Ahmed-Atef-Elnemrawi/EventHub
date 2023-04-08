@@ -1,3 +1,4 @@
-import * as UserApiActions from './user-api.actions'
+import * as UserAPIActions from './user-api.actions'
+import * as AuthAPIAction from './auth-api.actions'
 
-export{UserApiActions}
+export {UserAPIActions, AuthAPIAction}
