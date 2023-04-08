@@ -1,0 +1,34 @@
+<div class="container" fxLayout="column" *ngIf="userData$ | async as data ">
+  <mat-card
+    class="card mat-elevation-z0"
+    *ngFor="let artist of data['artists$'] | async as artists"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <button
+        class="avatar"
+      >
+        {{
+          ((artist.entity?.FirstName)![0] | camelCase) +
+            ((artist.entity?.LastName)![0] | camelCase)
+        }}
+      </button>
+      <div>
+        <a class="follower-name" [routerLink]="['/artists', artist.id]">
+          {{
+            artist.entity?.FirstName! + " " + artist.entity?.LastName!
+              | camelCase
+          }}</a
+        >
+        <p class="job-title">{{ artist.entity?.JobTitle | camelCase }}</p>
+      </div>
+    </div>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="unfollow(artist.id, data['userId'])"
+      fxFlexAlign="end"
+    >
+      UnFollow
+    </button>
+  </mat-card>
+</div>
