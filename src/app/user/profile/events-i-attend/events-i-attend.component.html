@@ -1,0 +1,75 @@
+<div class="container" *ngIf="userData$ | async as data">
+  <div class="inner-container" *ngFor="let date of data['dates$'] | async">
+    <div class="header">{{ date | date : "LLL, YYYY" }}</div>
+    <div *ngFor="let event of data['events$'] | async">
+      <mat-card
+        class="card mat-elevation-z0"
+        *ngIf="
+          (event.entity?.Date | date : 'LLL, YYYY') ===
+          (date | date : 'LLL, YYYY')
+        "
+      >
+        <div class="date-time">
+          <div class="date">
+            <div class="day">{{ event.entity?.Date | date : "dd" }}</div>
+            <div style="font-weight: 600; font-size: 14px">
+              <div class="">{{ event.entity?.Date | date : "EEEE" }}</div>
+              <div class="">{{ event.entity?.Date | date : "LLL, YYYY" }}</div>
+            </div>
+          </div>
+          <div class="time">{{ event.entity?.Date | date : "hh:mm a" }}</div>
+        </div>
+        <div class="content">
+          <p class="event-name">{{ event.entity?.Name | camelCase }}</p>
+          <p class="category">{{ event.entity?.Category?.name }}</p>
+          <a
+            class="artist-name"
+            [routerLink]="['/artists', event.entity?.Producer.producerId]"
+          >
+            {{
+              (event.entity?.Producer.firstName | camelCase) +
+                (event.entity?.Producer.lastName | camelCase)
+            }}
+          </a>
+        </div>
+        <div class="actions">
+          <div class="btn-group">
+            <button
+              mat-flat-button
+              color="primary"
+              class="btn"
+              [ngClass]="{
+                btn_disabled: event.entity?.EventState === 'Finished'
+              }"
+              (click)="
+                backOut(
+                  event.entity?.Producer.producerId,
+                  event.id,
+                  data['userId']
+                )
+              "
+            >
+              BackOut
+            </button>
+            <button
+              mat-flat-button
+              color
+              class="btn"
+              [ngClass]="{
+                btn_disabled: event.entity?.EventState === 'Finished'
+              }"
+            >
+              Add To Cal
+            </button>
+          </div>
+        </div>
+        <button
+          class="event-state"
+          *ngIf="event.entity?.EventState === 'Finished'"
+        >
+          Finished
+        </button>
+      </mat-card>
+    </div>
+  </div>
+</div>
