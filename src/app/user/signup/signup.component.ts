@@ -1,23 +1,29 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
+
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { Country, CountryCodes } from 'src/app/shared/models/country-codes';
-import { State } from 'src/app/state/state';
+import { State } from 'src/app/state/app.state';
 import { signupValidationMessages, UserForRegistrationDto } from '../models';
-import { getError } from '../state';
-import { UserApiActions } from '../state/actions';
+import { AuthAPIAction } from '../state/actions';
+import { authSelectors } from '../state';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class SignupComponent implements OnInit, AfterViewInit, OnDestroy {
   signUpForm!: FormGroup;
   hidePassword = true;
@@ -32,7 +38,11 @@ export class SignupComponent implements OnInit, AfterViewInit, OnDestroy {
   errorMessage$ = this.errorMessageSubject.asObservable();
   private destroyed$ = new Subject<void>();
 
-  constructor(private store: Store<State>, private fb: FormBuilder) {
+  constructor(
+    private store: Store<State>,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
     this.validator = new GenericValidator(signupValidationMessages);
   }
 
@@ -151,8 +161,10 @@ export class SignupComponent implements OnInit, AfterViewInit, OnDestroy {
         phoneNumber: code + phoneNumber,
       };
 
-      this.store.dispatch(UserApiActions.signup({ user: userForRegistrationDto }));
-      this.backendError$ = this.store.select(getError);
+      this.store.dispatch(
+        AuthAPIAction.signup({ user: userForRegistrationDto })
+      );
+      this.backendError$ = this.store.select(authSelectors.getError);
     }
   }
 }
