@@ -1,22 +1,34 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
-import { State } from 'src/app/state/state';
-import { updateProfileValidationMessages, UserProfile } from '../../models';
-import { getUserId, getUserProfile } from '../../state';
-import { UserApiActions } from '../../state/actions';
+import { State } from 'src/app/state/app.state';
+import {
+  updateProfileValidationMessages,
+  UserProfile,
+  UserProfileForManipulation,
+} from '../../models';
+import { userSelectors } from '../../state';
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { Country, CountryCodes } from 'src/app/shared/models/country-codes';
 import { MatDialog } from '@angular/material/dialog';
+import { UserAPIActions } from '../../state/actions';
 
 @Component({
   selector: 'app-profile-edit',
   templateUrl: './profile-edit.component.html',
   styleUrls: ['./profile-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class ProfileEditComponent implements OnInit, AfterViewInit, OnDestroy {
-  userProfile!: Observable<UserProfile>;
+  userProfile!: Observable<UserProfile | null>;
   userId!: string;
   editForm!: FormGroup;
   validator!: GenericValidator;
@@ -69,9 +81,9 @@ export class ProfileEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.userProfile = this.store.select(getUserProfile);
+    this.userProfile = this.store.select(userSelectors.getUserProfile);
     this.store
-      .select(getUserId)
+      .select(userSelectors.getUserId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((id) => (this.userId = id));
 
@@ -131,13 +143,13 @@ export class ProfileEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userProfile.subscribe((info) => {
       this.editForm.patchValue({
         ...info,
-        liveIn: info.country,
-        genre: info.genre.toString(),
+        liveIn: info!.liveIn,
+        genre: info!.genre.toString(),
       });
 
       this.editForm.get('phoneGroup')?.patchValue({
-        phoneNumber: info.phoneNumber?.slice(-10),
-        countryCode: info.phoneNumber?.slice(0, info.phoneNumber.length - 10),
+        phoneNumber: info!.phoneNumber?.slice(-10),
+        countryCode: info!.phoneNumber?.slice(0, info!.phoneNumber.length - 10),
       });
     });
   }
@@ -153,15 +165,14 @@ export class ProfileEditComponent implements OnInit, AfterViewInit, OnDestroy {
       const code = phoneGroup?.get('countryCode')?.value;
       const phoneNumber = phoneGroup?.get('phoneNumber')?.value;
 
-      let userProfileForUpdate: UserProfile = {
+      let userProfileForUpdate: UserProfileForManipulation = {
         ...this.editForm.value,
-        country: this.editForm.get('liveIn')?.value,
         genre: +this.editForm.get('genre')?.value,
         phoneNumber: code + phoneNumber,
       };
 
       this.store.dispatch(
-        UserApiActions.updateUserProfile({
+        UserAPIActions.updateUserProfile({
           userProfile: userProfileForUpdate,
           userId: this.userId,
         })
