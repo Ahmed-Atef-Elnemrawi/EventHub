@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   OnInit,
@@ -9,22 +8,21 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { props, Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import {
-  debounceTime,
   fromEvent,
-  map,
   merge,
   Observable,
   Subject,
   takeUntil,
 } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
-import { State } from 'src/app/state/state';
-import { AuthService } from '../auth.service';
+import { State } from 'src/app/state/app.state';
 import { AuthValidationMessages, UserForAuthDto } from '../models';
-import { getError, getIsAuthenticated } from '../state';
-import { UserApiActions } from '../state/actions';
+
+import { AuthAPIAction, UserAPIActions } from '../state/actions';
+import { authSelectors, userSelectors } from '../state';
 
 @Component({
   selector: 'app-login',
@@ -43,7 +41,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private destroyed$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private store: Store<State>) {
+  constructor(private fb: FormBuilder, private store: Store<State>, private router:Router) {
     this.genericValidator = new GenericValidator(AuthValidationMessages);
   }
   ngOnDestroy(): void {
@@ -57,7 +55,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     merge(inputBlurs$, this.loginForm.valueChanges)
-      .pipe(debounceTime(500))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         () =>
           (this.errorMessages = this.genericValidator.processMessages(
@@ -75,18 +73,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmit() {
     let userCredentials = { ...this.loginForm.value } as UserForAuthDto;
-
-    this.store.dispatch(UserApiActions.login({ user: userCredentials }));
-
-    //load the user
-    this.store
-      .select(getIsAuthenticated)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((isAuthenticated) => {
-        if (isAuthenticated === true)
-          return this.store.dispatch(UserApiActions.loadUser());
-      });
-
-    this.backendErrors$ = this.store.select(getError);
-  }
+    this.store.dispatch(AuthAPIAction.login({ user: userCredentials }));
+    this.backendErrors$ = this.store.select(authSelectors.getError);  }
 }
