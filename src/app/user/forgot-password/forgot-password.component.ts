@@ -4,11 +4,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, observable, Subject } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
-import { State } from 'src/app/state/state';
-import { AuthService } from '../auth.service';
+import { State } from 'src/app/state/app.state';
+import { AuthService } from '../services/auth.service';
 import { ForgotPasswordDto } from '../models';
-import { getError } from '../state';
-import { UserApiActions } from '../state/actions';
+import { authSelectors } from '../state';
+import { AuthAPIAction } from '../state/actions';
 
 @Component({
   selector: 'app-forgot-password',
@@ -39,7 +39,7 @@ export class ForgotPasswordComponent implements OnInit {
       resetPasswordClientURI: 'https://localhost:4200/users/reset-password',
     };
 
-    this.store.dispatch(UserApiActions.forgotPassword({ forgotPasswordDto }));
-    this.backendError$ = this.store.select(getError);
+    this.store.dispatch(AuthAPIAction.forgotPassword({ forgotPasswordDto }));
+    this.backendError$ = this.store.select(authSelectors.getError);
 }
 }
