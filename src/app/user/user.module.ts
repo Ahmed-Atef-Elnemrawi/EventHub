@@ -13,14 +13,17 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { authReducer } from './state/user.reducer';
-import { UserEffects } from './state/user.effects';
-import { ErrorHandlerService } from './error-handler.service';
-import { JwtModule } from '@auth0/angular-jwt';
+import { UserEffects } from './state/effects/user.effects';
+import { ErrorHandlerService } from './services/error-handler.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
-import { AuthGuard } from './auth.guard';
-
+import { AuthPagesGuard } from './guards/auth-pages.guard';
+import { WhoImFollowComponent } from './profile/who-im-follow/who-im-follow.component';
+import { EventsIAttendComponent } from './profile/events-i-attend/events-i-attend.component';
+import { UserResolver } from './user.resolver';
+import { AuthUserReducer } from './state/reducers/root.reducer';
+import { AuthEffects } from './state/effects/auth.effects';
+import { NonAuthPagesGuard } from './guards/non-auth-pages.guard';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,9 @@ import { AuthGuard } from './auth.guard';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     ProfileComponent,
-    ProfileEditComponent
+    ProfileEditComponent,
+    WhoImFollowComponent,
+    EventsIAttendComponent,
   ],
   imports: [
     CommonModule,
@@ -38,32 +43,55 @@ import { AuthGuard } from './auth.guard';
     FlexLayoutModule,
     SharedModule,
     HttpClientModule,
-    StoreModule.forFeature('user', authReducer),
-    EffectsModule.forFeature([UserEffects]),
+    StoreModule.forFeature('authUser', AuthUserReducer),
+    EffectsModule.forFeature([AuthEffects, UserEffects]),
 
     RouterModule.forChild([
       {
         path: 'users',
         children: [
-          { path: 'signup', component: SignupComponent },
-          { path: 'login', component: LoginComponent},
-          { path: 'account-recovery', component: ForgotPasswordComponent },
-          { path: 'reset-password', component: ResetPasswordComponent },
-          { path: ':userName', component: ProfileComponent,canActivate:[AuthGuard] , children:[
-            {path:'event-i-attends', component: ProfileComponent},
-            {path:'edit', component: ProfileEditComponent}
-          ] },
+          {
+            path: 'signup',
+            component: SignupComponent,
+            canActivate: [NonAuthPagesGuard],
+          },
+          {
+            path: 'login',
+            component: LoginComponent,
+            canActivate: [NonAuthPagesGuard],
+          },
+          {
+            path: 'account-recovery',
+            component: ForgotPasswordComponent,
+            canActivate: [NonAuthPagesGuard],
+          },
+          {
+            path: 'reset-password',
+            component: ResetPasswordComponent,
+            canActivate: [NonAuthPagesGuard],
+          },
+          {
+            path: ':userId',
+            component: ProfileComponent,
+            canActivate: [AuthPagesGuard],
+
+            children: [
+              {
+                path: 'events-I-attend',
+                component: EventsIAttendComponent,
+                resolve: { userData: UserResolver },
+              },
+              {
+                path: 'who-Im-follow',
+                component: WhoImFollowComponent,
+                resolve: { userData: UserResolver },
+              },
+              { path: 'edit', component: ProfileEditComponent },
+            ],
+          },
         ],
       },
     ]),
-
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => null,
-        allowedDomains: ['https://localhost:5001'],
-        disallowedRoutes: [],
-      },
-    }),
   ],
   providers: [
     {
