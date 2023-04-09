@@ -1,5 +1,10 @@
+
+export interface ShapedEntity{
+  id:string,
+  entity:any,
+}
+
 export interface UserProfile {
-  id: string,
   firstName: string;
   lastName: string;
   userName: string;
@@ -7,18 +12,41 @@ export interface UserProfile {
   email: string;
   phoneNumber: string;
   genre: string;
-  country: string;
-  profilePicture?: string;
+  liveIn: string;
+  userPageId: string;
+}
+
+export interface UserProfileForManipulation {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  age: 0;
+  email: string;
+  phoneNumber: string;
+  genre: string;
+  liveIn: string;
+  userPage: userPageForManipulation;
+}
+
+export interface UserPage {
+  userPageId: string;
+  entityId: string;
+  pageType: PageType;
+}
+
+export enum PageType {
+  artist = 0,
+  organization = 1,
+}
+
+export interface userPageForManipulation {
+  entityId: string;
+  type: PageType;
 }
 
 export interface TokenDto {
   accessToken: string;
   refreshToken: string;
-}
-
-export interface AuthResponse {
-  tokenDto: TokenDto,
-  userProfile: UserProfile
 }
 
 export interface UserForAuthDto {
@@ -78,7 +106,7 @@ export const resetPasswordValidationMessages: {
               password should have at least one special character(!@#$%^&*=+-).`,
   },
   confirm: {
-    match: 'Password and confirmation does not match'
+    match: 'Password and confirmation does not match',
   },
 };
 
@@ -112,14 +140,14 @@ export const signupValidationMessages:
               password should have at least one special character(!@#$%^&*=+-).`,
   },
   phoneNumber: {
-    required: 'Phone number is requried. ',
+    required: 'Phone number is required. ',
     pattern: 'Please enter a valid number. ',
   },
   liveIn: {
     required: 'Please enter your country.',
   },
   age: {
-    required: 'Age is requried.',
+    required: 'Age is required.',
     min: 'Age should be greater than 10 years. ',
     max: 'Age should be less than 80 years. ',
     pattern: 'Age should be a number',
@@ -128,3 +156,7 @@ export const signupValidationMessages:
     required: 'Genre is required.',
   },
 };
+
+export const updateProfileValidationMessages:
+  | { [key: string]: { [key: string]: string } }
+  | any = signupValidationMessages;
