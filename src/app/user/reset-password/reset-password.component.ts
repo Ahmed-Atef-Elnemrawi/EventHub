@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   OnInit,
@@ -12,11 +11,9 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
   debounceTime,
@@ -27,11 +24,10 @@ import {
   takeUntil,
 } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
-import { State } from 'src/app/state/state';
-import { UserApiActions } from '../state/actions';
+import { State } from 'src/app/state/app.state';
 import { ResetPasswordDto, resetPasswordValidationMessages } from '../models';
-import { getError } from '../state';
-import * as AuthActions from '../state/actions';
+import { AuthAPIAction } from '../state/actions';
+import { authSelectors } from '../state';
 
 function compare(control: AbstractControl): { [key: string]: boolean } | null {
   const parent = control.parent;
@@ -125,7 +121,7 @@ export class ResetPasswordComponent
       email,
     };
 
-    this.store.dispatch(UserApiActions.resetPassword({ resetPasswordDto }));
-    this.backendErrors$ = this.store.select(getError);
+    this.store.dispatch(AuthAPIAction.resetPassword({ resetPasswordDto }));
+    this.backendErrors$ = this.store.select(authSelectors.getError);
   };
 }
