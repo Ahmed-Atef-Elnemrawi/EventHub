@@ -6,13 +6,16 @@ import {
   ArtistEventDto,
   AttendantForCreationDto,
 } from '../models';
+import { environment } from 'src/environments/environment';
+
+const ROOT_PATH = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private producersRootPath = 'https://localhost:5001/api/v1.0/producers';
-  private eventsRootPath = 'https://localhost:5001/api/v1.0/events';
+  private producersRootPath = `${ROOT_PATH}/producers`;
+  private eventsRootPath = `${ROOT_PATH}/events`;
 
   constructor(private http: HttpClient) {}
 
