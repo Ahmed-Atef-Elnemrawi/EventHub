@@ -1,6 +1,7 @@
 .container {
   // padding-block: 2rem;
-  padding-inline: 0;
+  max-width: inherit;
+  padding-left: 1rem;
   .card,
   .row {
     padding: 1.2rem;
