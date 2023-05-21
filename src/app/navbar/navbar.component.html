@@ -5,21 +5,22 @@
     fxLayoutAlign="space-between"
     ngClass.xs="padding-sm"
   >
-    <div class="logo" fxFlexAlign="end"><span>Event</span>Hub</div>
+    <div class="logo" fxFlexAlign="center">
+      <a routerLink="/"><span>Event</span>Hub</a>
+    </div>
 
     <div
-      fxFlexAlign="center"
-      fxHide.xs
-      fxHide.sm
-      fxShow.gt-xs
-      style="width: 100%; max-width: 450px"
+    id="search-container"
+    class="search-container"
       *ngIf="isAuthenticated$ | async"
     >
       <mat-card
+        id="#search-wrapper"
         class="mat-elevation-z5 search-wrapper"
         title="search"
       >
         <form
+        class="form"
           fxLayout="row"
           fxLayoutAlign="space-between center"
           [formGroup]="searchForm"
@@ -37,38 +38,68 @@
             class="search"
             type="search"
             formControlName="search"
+            (input)="showClearBtn()"
+
+
           />
-          <button mat-icon-button class="mat-elevation-z0">
-            <mat-icon fontIcon="search" matSuffix></mat-icon>
-          </button>
         </form>
+        <mat-icon fontIcon="search" id="search-icon" matSuffix></mat-icon>
       </mat-card>
 
-      <mat-card
-        [fxShow]="!!(searchResult$ |async)"
-        class="mat-elevation-z0 search-result"
-      >
-      </mat-card>
+      <div class="search-result-container">
+        <mat-card
+        fxFlexAlign="center"
+          *ngIf="searchResult$ | async as results"
+          class="mat-elevation-z0 search-result"
+        >
+          <p fxLayoutAlign="center" *ngIf="results.length === 0" >
+            We couldn't find any results that match your search
+          </p>
+
+          <div *ngFor="let result of results">
+            <a *ngIf="result.entity?.EventId" [routerLink]="['/artists',
+            result.entity?.Producer?.producerId,
+            { outlets: { secondary: ['events', result.id] } }]">
+             {{result.entity.Name | camelCase}}</a>
+
+            <a *ngIf="result.entity.ProducerId" [routerLink]="['/artists',result.id]">
+              {{(result.entity.FirstName + " " + result.entity.LastName) | camelCase}}
+            </a>
+          </div>
+        </mat-card>
+      </div>
     </div>
+
+    <div class="search-btn-wrapper" *ngIf="isAuthenticated$ | async">
+      <button
+        #searchBtnXS
+        mat-icon-button
+        class="search-btn-xs"
+        (click)="showSearch()"
+      >
+        <mat-icon fontIcon="search" class="search-icon-xs" matSuffix></mat-icon>
+      </button>
+    </div>
+
     <div
       class="app-header-right"
       fxLayout="row"
       fxFlexAlign="center"
-      ngStyle.xs="margin-left:.8em"
-      ngStyle.gt-xs="margin-left:2em"
+      Style="margin-left:2em"
       *ngIf="isAuthenticated$ | async"
     >
-
-      <button type="button" class="notifications btn">
+      <button type="button" class="btn">
         <mat-icon
-          matBadge="{{ notificationsCount }}"
+          matBadge="{{ notificationsCount$ | async }}"
           matBadgeOverlap="true"
           matBadgeSize="small"
           matBadgePosition="before"
           fontIcon="notifications"
           title="notifications"
+          (click)="toggleNotifications()"
         ></mat-icon>
       </button>
+      <ng-container  *ngTemplateOutlet="notificationTemplate"></ng-container>
 
       <button
         mat-card-avatar
@@ -82,7 +113,10 @@
         {{ avatarName }}
       </button>
       <mat-menu #menu="matMenu" class="profile-menu">
-        <button mat-menu-item [routerLink]="['users',userId$ |async, 'events-I-attend']">
+        <button
+          mat-menu-item
+          [routerLink]="['users', userId$ | async, 'events-I-attend']"
+        >
           {{ userName$ | async | camelCase }}
         </button>
 
@@ -127,35 +161,28 @@
     </div>
   </div>
 
-  <div fxLayout="column" fxLayoutAlign=" center center" style="padding: 1em">
-    <mat-card
-      class="mat-elevation-z0 search-wrapper-xs"
-      fxShow.gt-xs="false"
-      fxShow.sm
-      fxShow.xs
-      *ngIf="isAuthenticated$ | async"
-    >
-      <form
-        [formGroup]="searchForm"
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
-        [formGroup]="searchForm"
-      >
-        <mat-select value="event" formControlName="searchCategory">
-          <mat-option value="event" title="Event"
-            ><mat-icon fontIcon="event"></mat-icon> Event</mat-option
+
+/*notification template*/
+  <ng-template #notificationTemplate>
+    <mat-card class="mat-elevation-z0 card notification" *ngIf="toggleNotification$ |async">
+      <button mat-icon-button color="none" class="close-btn" (click)="toggleNotifications()"><mat-icon fontIcon="close" class="icon"></mat-icon></button>
+      <p class="default-message" *ngIf="(currentDayEvents$ | async)?.length === 0">You Don't Have Any Event Today.</p>
+      <div class="notification-card" *ngFor="let event of currentDayEvents$ | async">
+        <h2 class="notification-title">
+          {{ event.entity?.Date | date : "hh:mm aa" }}
+        </h2>
+        <p class="notification-message">
+          You have to attend
+          <a
+            [routerLink]="[
+              '/artists',
+              event.entity?.Producer?.producerId,
+              { outlets: { secondary: ['events', event.id] } }
+            ]"
+            >{{ event.entity?.Name }}</a
           >
-          <mat-option value="org" title="organization">
-            <mat-icon fontIcon="business"></mat-icon> Org</mat-option
-          >
-          <mat-option value="artist" title="Artist">
-            <mat-icon fontIcon="person"></mat-icon> Artist</mat-option
-          >
-        </mat-select>
-        <input matInput class="search" type="search" formControlName="search" />
-        <mat-icon fontIcon="search" matSuffix></mat-icon>
-      </form>
+          Today.
+        </p>
+      </div>
     </mat-card>
-  </div>
-  <span fxFlex.gt-xs="2rem"></span>
-</div>
+  </ng-template>
