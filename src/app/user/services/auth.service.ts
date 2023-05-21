@@ -10,12 +10,14 @@ import {
   UserProfile,
   UserProfileForManipulation,
 } from '../models';
+import { environment } from 'src/environments/environment';
 
+const ROOT_PATH = environment.apiUrl;
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private rootPath = 'https://localhost:5001/api/users';
+  private rootPath = `${ROOT_PATH}/users`;
 
   constructor(private jwtHelper: JwtHelperService, private http: HttpClient) {}
 
