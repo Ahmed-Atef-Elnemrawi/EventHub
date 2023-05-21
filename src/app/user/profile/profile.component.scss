@@ -19,6 +19,7 @@
 }
 
 .toggle-btn {
+  margin-top: 50px;
   padding: 12px 30px;
   background-color: #1565c0;
   border: none;
@@ -28,11 +29,11 @@
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
   position: relative;
-  right: 34px;
+  left: -30px;
 
   &:hover {
     position: relative;
-    right: 20px;
+    left: -25px;
   }
 }
 
@@ -82,8 +83,9 @@ mat-card {
 
 .sidenav-container-gt-xs {
   height: fit-content;
-  position: sticky;
-  top: 10px;
+  position: fixed;
+  top: auto;
+  max-width: inherit;
 
   button {
     margin-block: 1px;
