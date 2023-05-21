@@ -6,8 +6,6 @@ import {
 } from '../../models';
 import { ShapedEntity } from 'src/app/artist-home/models';
 
-
-
 export const loadUser = createAction('[User] Load User');
 export const loadUserSuccess = createAction(
   '[User] Load User Success',
@@ -18,7 +16,6 @@ export const loadUserFailure = createAction(
   '[User] Load User Failed',
   props<{ error: string }>()
 );
-
 
 export const updateUserProfile = createAction(
   '[User] update user profile',
@@ -50,48 +47,71 @@ export const LoadUserPageFailure = createAction(
   props<{ error: string }>()
 );
 
-export const ResetUserProfile = createAction(
-  '[User] reset user'
-)
+export const ResetUserProfile = createAction('[User] reset user');
 
-export const
-loadArtistsIFollow = createAction(
+export const loadArtistsIFollow = createAction(
   '[User] load artists I follow',
-  props<{userId:string, fields:'FirstName,LastName,JobTitle'}>()
-)
-export const
-loadArtistsIFollowSuccess = createAction(
+  props<{ userId: string; fields: 'FirstName,LastName,JobTitle' }>()
+);
+export const loadArtistsIFollowSuccess = createAction(
   '[User] load artists I follow success',
-  props<{artists: ShapedEntity[]}>()
-)
-export const
-loadArtistsIFollowFailure = createAction(
+  props<{ artists: ShapedEntity[] }>()
+);
+export const loadArtistsIFollowFailure = createAction(
   '[User] load artists I follow failed',
-  props<{error:string}>()
-)
+  props<{ error: string }>()
+);
+
+export const unFollowArtist = createAction(
+  '[User] unFollow artist',
+  props<{ userId: string; artistId: string }>()
+);
+
+export const unFollowArtistSuccess = createAction(
+  '[User] unFollow artist success'
+);
+
+export const unFollowArtistFailure = createAction(
+  '[User] unFollow artist failed',
+  props<{ error: string }>()
+);
 
 export const loadEventsIAttend = createAction(
-  '[user] load events I attend',
-  props<{userId:string}>()
-)
+  '[User] load events I attend',
+  props<{ userId: string }>()
+);
 export const loadEventsIAttendSuccess = createAction(
-  '[user] load events I attend success',
-  props<{events: ShapedEntity[]}>()
-)
+  '[User] load events I attend success',
+  props<{ events: ShapedEntity[] }>()
+);
 export const loadEventsIAttendFailure = createAction(
-  '[user] load events I attend failed',
-  props<{error:string}>()
-)
+  '[User] load events I attend failed',
+  props<{ error: string }>()
+);
 
 export const loadEventsIAttendDates = createAction(
-  '[user] load events I attend dates',
-  props<{userId: string}>()
-)
+  '[User] load events I attend dates',
+  props<{ userId: string }>()
+);
 export const loadEventsIAttendDatesSuccess = createAction(
-  '[user] load events I attend dates success',
-  props<{dates: Date[]}>()
-)
+  '[User] load events I attend dates success',
+  props<{ dates: Date[] }>()
+);
 export const loadEventsIAttendDatesFailure = createAction(
-  '[user] load events I attend dates failed',
-  props<{error: string}>()
-)
+  '[User] load events I attend dates failed',
+  props<{ error: string }>()
+);
+
+export const unAttendEvent = createAction(
+  '[User] un-attend event',
+  props<{ artistId: string; eventId: string; userId: string }>()
+);
+
+export const unAttendEventSuccess = createAction(
+  '[User] un-attend event success'
+);
+
+export const unAttendEventFailure = createAction(
+  '[User] un-attend event failed',
+  props<{ error: string }>()
+);

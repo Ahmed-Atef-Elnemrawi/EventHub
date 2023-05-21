@@ -10,6 +10,7 @@ import {
   map,
   mergeMap,
   of,
+  switchMap,
 } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserPageService } from '../../services/user-page.service';
@@ -18,10 +19,11 @@ import { UserService } from '../../services/user.service';
 
 @Injectable()
 export class UserEffects {
+  userId!: string;
   constructor(
     private authService: AuthService,
     private userPageService: UserPageService,
-    private userService:UserService,
+    private userService: UserService,
     private actions$: Actions
   ) {}
 
@@ -99,8 +101,9 @@ export class UserEffects {
   loadEventsIAttend$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserAPIActions.loadEventsIAttend),
-      mergeMap((action) =>
-        this.userService.getEventsIAttend(action.userId).pipe(
+      mergeMap((action) => {
+        this.userId = action.userId;
+        return this.userService.getEventsIAttend(action.userId).pipe(
           map((response) =>
             UserAPIActions.loadEventsIAttendSuccess({
               events: response,
@@ -113,8 +116,8 @@ export class UserEffects {
               })
             )
           )
-        )
-      )
+        );
+      })
     )
   );
 
@@ -123,10 +126,7 @@ export class UserEffects {
       .pipe(
         ofType(UserAPIActions.loadArtistsIFollow),
         mergeMap((action) =>
-          this.userService.getArtistsIFollow(
-            action.userId,
-            action.fields
-          )
+          this.userService.getArtistsIFollow(action.userId, action.fields)
         )
       )
       .pipe(
@@ -169,4 +169,65 @@ export class UserEffects {
       )
   );
 
+  unAttendEvent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserAPIActions.unAttendEvent),
+      concatMap((action) =>
+        this.userService
+          .unAttendEvent(action.artistId, action.eventId, action.userId)
+          .pipe(
+            map(() => UserAPIActions.unAttendEventSuccess()),
+            catchError((err: HttpErrorResponse) =>
+              of(UserAPIActions.unAttendEventFailure({ error: err.message }))
+            )
+          )
+      )
+    )
+  );
+
+  unFollowArtist$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserAPIActions.unFollowArtist),
+      concatMap((action) =>
+        this.userService.unFollowArtist(action.artistId, action.userId).pipe(
+          map(() => UserAPIActions.unFollowArtistSuccess()),
+          catchError((err: HttpErrorResponse) =>
+            of(
+              UserAPIActions.unFollowArtistFailure({
+                error: err.message,
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
+  reloadEventIAttend$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserAPIActions.unAttendEventSuccess),
+      map((action) => UserAPIActions.loadEventsIAttend({ userId: this.userId }))
+    )
+  );
+
+  reloadEventIAttendDates$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserAPIActions.unAttendEventSuccess),
+      map((action) =>
+        UserAPIActions.loadEventsIAttendDates({ userId: this.userId })
+      )
+    )
+  );
+
+  reloadArtistsIFollow = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserAPIActions.unFollowArtistSuccess),
+      map(() =>
+        UserAPIActions.loadArtistsIFollow({
+          userId: this.userId,
+          fields: 'FirstName,LastName,JobTitle',
+        })
+      )
+    )
+  );
 }

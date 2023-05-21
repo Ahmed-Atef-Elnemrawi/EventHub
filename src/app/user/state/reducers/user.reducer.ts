@@ -83,7 +83,6 @@ export const userReducer = createReducer<UserState>(
     };
   }),
 
-
   on(UserAPIActions.ResetUserProfile,(state, actions) =>{
     return {
       ...initialState
@@ -184,5 +183,48 @@ export const userReducer = createReducer<UserState>(
       message: 'load events I attend dates failed',
       error: action.error,
     };
-  })
+  }),
+
+  on(UserAPIActions.unAttendEvent,(state, action) =>{
+    return {
+      ...state,
+      message:'',
+      error:''
+    }
+  }),
+
+  on(UserAPIActions.unAttendEventSuccess,(state, action) =>{
+    return {
+      ...state,
+    }
+  }),
+
+  on(UserAPIActions.unAttendEventFailure,(state, action) =>{
+    return {
+      ...state,
+      error:action.error
+    }
+  }),
+
+  on(UserAPIActions.unFollowArtist,(state,action)=>{
+    return{
+      ...state,
+      message:'',
+      error:''
+    }
+  }),
+
+  on(UserAPIActions.unFollowArtistSuccess,(state,action)=>{
+    return{
+      ...state,
+    }
+  }),
+
+  on(UserAPIActions.unFollowArtistFailure,(state,action)=>{
+    return{
+      ...state,
+      error:action.error
+    }
+  }),
+
 );
