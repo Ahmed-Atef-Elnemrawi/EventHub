@@ -4,6 +4,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, concatMap, map, mergeMap, of } from 'rxjs';
 import { EventService } from '../../services/artist-event.service';
 import {ArtistEventAPIActions } from '../actions';
+import { UserAPIActions } from 'src/app/user/state/actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ArtistEventEffect {
@@ -12,6 +14,7 @@ export class ArtistEventEffect {
   constructor(
     private actions$: Actions,
     private eventService: EventService,
+    private router: Router
   ) {}
 
 
@@ -47,12 +50,15 @@ export class ArtistEventEffect {
     return this.actions$
       .pipe(
         ofType(ArtistEventAPIActions.createArtistEventAttendant),
-        concatMap((action) =>
-          this.eventService.createEventAttendant(
+        concatMap((action) =>{
+
+          this.router.navigateByUrl(`users/${this.attendantId}/events-I-attend`)
+          return this.eventService.createEventAttendant(
             action.artistId,
             action.eventId,
             action.attendant
           )
+        }
         )
       )
       .pipe(
