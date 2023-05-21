@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 import { ArtistAPIActions } from 'src/app/artist-home/state/actions';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
 
 import { State } from 'src/app/state/app.state';
 
@@ -18,10 +19,12 @@ import { State } from 'src/app/state/app.state';
 })
 export class WhoImFollowComponent implements OnInit {
   userData$!: Observable<any>;
+  isLoadingState$!: Observable<boolean>;
 
-  constructor(private store: Store<State>,private route:ActivatedRoute ) {}
+  constructor(private store: Store<State>,private route:ActivatedRoute, private loaderService:LoadingService ) {}
 
   ngOnInit(): void {
+    this.isLoadingState$ = this.loaderService.isWhoImFollowLoaded$.asObservable();
      this.userData$ = this.route.data.pipe(map(data => data['userData']))
   }
 
