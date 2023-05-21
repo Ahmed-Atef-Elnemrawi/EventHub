@@ -8,21 +8,15 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  fromEvent,
-  merge,
-  Observable,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { fromEvent, merge, Observable, Subject, takeUntil } from 'rxjs';
 import { GenericValidator } from 'src/app/shared/generic-validators';
 import { State } from 'src/app/state/app.state';
 import { AuthValidationMessages, UserForAuthDto } from '../models';
 
-import { AuthAPIAction, UserAPIActions } from '../state/actions';
-import { authSelectors, userSelectors } from '../state';
+import { AuthAPIAction } from '../state/actions';
+import { authSelectors } from '../state';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -40,8 +34,13 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   hidePassword: boolean = true;
 
   private destroyed$ = new Subject<void>();
+  isLoadingData$!: Observable<boolean>;
 
-  constructor(private fb: FormBuilder, private store: Store<State>, private router:Router) {
+  constructor(
+    private fb: FormBuilder,
+    private store: Store<State>,
+    private loaderService: LoadingService
+  ) {
     this.genericValidator = new GenericValidator(AuthValidationMessages);
   }
   ngOnDestroy(): void {
@@ -65,6 +64,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isLoadingData$ = this.loaderService.isUserLoaded$.asObservable();
     this.loginForm = this.fb.group({
       email: ['', [Validators.email, Validators.required]],
       password: ['', [Validators.required, Validators.minLength(10)]],
@@ -74,5 +74,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   onSubmit() {
     let userCredentials = { ...this.loginForm.value } as UserForAuthDto;
     this.store.dispatch(AuthAPIAction.login({ user: userCredentials }));
-    this.backendErrors$ = this.store.select(authSelectors.getError);  }
+    this.backendErrors$ = this.store.select(authSelectors.getError);
+  }
 }
