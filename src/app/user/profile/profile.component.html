@@ -18,55 +18,54 @@
   ngClass.xs="container-xs"
   ngClass.sm="container-sm"
 >
-  <mat-card
+  <div
     fxHide.xs="true"
     fxFlex.gt-xs="30%"
     fxFlex.gt-sm="20%"
-    class="mat-elevation-z3 sidenav-container-gt-xs"
   >
-    <div class="sidenav-content" fxLayout="column">
-      <button
-        id="btn"
-        type="button"
-        mat-flat-button
-        routerLink="/users/{{ userId$ | async }}/events-I-attend"
-        routerLinkActive="active"
-      
-      >
-        Events I Attend
-      </button>
-      <button
-      type="button"
-        id="btn"
-        mat-flat-button
-        routerLink="/users/{{ userId$ | async }}/who-Im-follow"
-                routerLinkActive="active"
-
-      >
-        Who I'm Follow
-      </button>
-      <button
-        id="btn"
-        mat-flat-button
-        (click)="loadPage()"
-        *ngIf="(userRole$ | async) === 'Producer'"
-                routerLinkActive="active"
-
-      >
-        My Page
-      </button>
-      <button
-        id="btn"
-        mat-flat-button
-        routerLink="/users/{{ userId$ | async }}/edit"
-                routerLinkActive="active"
-
-      >
-        Edit My Profile
-      </button>
-      <button id="btn" mat-flat-button (click)="logout()">Log Out</button>
-    </div>
-  </mat-card>
+    <mat-card
+    class="mat-elevation-z3 sidenav-container-gt-xs"
+    >
+      <div class="sidenav-content" fxLayout="column">
+        <button
+          id="btn"
+          type="button"
+          mat-flat-button
+          routerLink="/users/{{ userId$ | async }}/events-I-attend"
+          routerLinkActive="active"
+        >
+          Events I Attend
+        </button>
+        <button
+          type="button"
+          id="btn"
+          mat-flat-button
+          routerLink="/users/{{ userId$ | async }}/who-Im-follow"
+          routerLinkActive="active"
+        >
+          Who I'm Follow
+        </button>
+        <button
+          id="btn"
+          mat-flat-button
+          (click)="loadPage()"
+          *ngIf="(userRole$ | async) === 'Producer'"
+          routerLinkActive="active"
+        >
+          My Page
+        </button>
+        <button
+          id="btn"
+          mat-flat-button
+          routerLink="/users/{{ userId$ | async }}/edit"
+          routerLinkActive="active"
+        >
+          Edit My Profile
+        </button>
+        <button id="btn" mat-flat-button (click)="logout()">Log Out</button>
+      </div>
+    </mat-card>
+  </div>
 
   <div fxFlex.gt-sm="80%" fxFlex.gt-xs="75%" fxFlex.xs="100%">
     <router-outlet>
@@ -95,7 +94,7 @@
         type="button"
         (click)="toggle()"
         mat-flat-button
-        routerLink="/users/{{ userName$ | async }}/events-I-attend"
+        routerLink="/users/{{ userId$ | async }}/events-I-attend"
         routerLinkActive="true"
       >
         Events I Attend
@@ -104,7 +103,7 @@
         type="button"
         (click)="toggle()"
         mat-flat-button
-        routerLink="/users/{{ userName$ | async }}/who-Im-follow"
+        routerLink="/users/{{ userId$ | async }}/who-Im-follow"
       >
         Who I'm Follow
       </button>
@@ -121,7 +120,7 @@
         type="button"
         (click)="toggle()"
         mat-flat-button
-        routerLink="/users/{{ userName$ | async }}/edit"
+        routerLink="/users/{{ userId$ | async }}/edit"
       >
         Edit Profile
       </button>
