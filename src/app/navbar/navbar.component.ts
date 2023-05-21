@@ -17,7 +17,6 @@ import { AuthAPIAction } from '../user/state/actions';
 import { userSelectors } from '../user/state';
 import * as NavbarActions from './state/actions';
 import * as Selectors from './state/selectors';
-import { SharedService } from '../shared/shared.service';
 import { getCurrentDayEvents } from '../home/state/selectors/home.selectors';
 
 @Component({
@@ -51,7 +50,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private el: ElementRef,
     private renderer: Renderer2,
-    private sharedService: SharedService
   ) {}
 
 
