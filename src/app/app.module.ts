@@ -14,22 +14,26 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { NavbarModule } from './navbar/navbar.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HomeComponent } from './home/home.component';
 import { ArtistHomeModule } from './artist-home/artist-home.module';
 import { AuthInterceptor } from './shared/auth-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
+import { HomeModule } from './home/home.module';
+import { LoadingInterceptor } from './shared/loading/loading-interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     MaterialModule,
+    HomeModule,
     UserModule,
     NavbarModule,
     ArtistHomeModule,
+    SharedModule,
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
@@ -38,7 +42,7 @@ import { JwtModule } from '@auth0/angular-jwt';
       logOnly: environment.production,
     }),
 
-      JwtModule.forRoot({
+    JwtModule.forRoot({
       config: {
         tokenGetter: () => null,
         allowedDomains: ['https://localhost:5001'],
@@ -52,6 +56,7 @@ import { JwtModule } from '@auth0/angular-jwt';
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
