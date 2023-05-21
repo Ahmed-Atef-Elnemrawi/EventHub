@@ -3,6 +3,7 @@
 
   <mat-card  class=" mat-elevation-z3" fxFlexAlign="center">
     <mat-card-header fxLayout="column" fxLayoutAlign="start center">
+      <app-loading *ngIf="isLoadingData$ | async"></app-loading>
       <mat-card-title>Sign In</mat-card-title>
     </mat-card-header>
 
@@ -72,7 +73,7 @@
           </button>
 
           <button
-          
+
           type="button"
             mat-flat-button
             [routerLink]="['/users/signup']"
