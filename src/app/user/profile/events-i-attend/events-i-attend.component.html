@@ -1,4 +1,5 @@
 <div class="container" *ngIf="userData$ | async as data">
+    <app-loading  fxLayoutAlign="center" *ngIf="(isLoadingData$ | async)"></app-loading>
   <div class="inner-container" *ngFor="let date of data['dates$'] | async">
     <div class="header">{{ date | date : "LLL, YYYY" }}</div>
     <div *ngFor="let event of data['events$'] | async">
