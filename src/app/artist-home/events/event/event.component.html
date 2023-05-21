@@ -1,25 +1,30 @@
 <div id="details-container" class="details-container">
-  <mat-card *ngIf="currentEvent$ | async as event">
+  <button
+    mat-mini-fab
+    color="primary"
+    title="nav to artist home"
+    (click)="navToArtistHome()"
+    style="margin-bottom: .5rem;"
+  >
+    <mat-icon fontIcon="close"></mat-icon>
+  </button>
+  <mat-card class="mat-elevation-z0" *ngIf="currentEvent$ | async as event">
     <mat-card-content>
       <div fxLayout="row">
         <p class="title">Name:</p>
         <p class="content">{{ event.entity?.Name }}</p>
       </div>
       <div fxLayout="row">
-        <p class="title">Medium:</p>
-        <p class="content">{{ "" }}</p>
-      </div>
-      <div fxLayout="row">
         <p class="title">category:</p>
-        <p class="content">{{ event.entity?.Category }}</p>
+        <p class="content">{{ event.entity?.Category.name }}</p>
       </div>
       <div fxLayout="row">
         <p class="title">date:</p>
-        <p class="content">{{ event.entity?.Date | date: 'medium' }}</p>
+        <p class="content">{{ event.entity?.Date | date : "medium" }}</p>
       </div>
       <div fxLayout="row" *ngIf="event.entity?.Url as url">
         <p class="title">URL:</p>
-        <p class="content">{{ url }}</p>
+        <a href="{{url}}" class="content">{{ url }}</a>
       </div>
       <div fxLayout="row" *ngIf="event.entity?.Country as country">
         <p class="title">Country:</p>
@@ -32,18 +37,38 @@
 
       <div fxLayout="column" class="description">
         <p class="title">Description</p>
-        <p class="content">{{event.entity?.Description}}</p>
+        <p class="content">{{ event.entity?.Description }}</p>
       </div>
     </mat-card-content>
-    <button
-      type="button"
-      class="close-btn"
-      mat-flat-button
-      color="primary"
-      (click)="back()"
+    <div
+      class="btn-group"
+      fxLayout="row"
+      fxLayoutAlign="flex-end"
+      fxLayoutGap=".5rem"
+        *ngIf="userInfo$ | async as userInfo"
     >
-      Close
-    </button>
+      <button
+        mat-flat-button
+        type="button"
+        color="primary"
+        *ngIf="event.entity?.Producer.producerId !== actualArtistId &&
+         (event.entity?.Date | date:'yyy-MM-dd')! > currentDate"
+        [ngClass]="{ btn_disabled: event.entity?.EventState === 'Finished' }"
+        (click)="attend(event.id, userInfo?.user, userInfo?.userId)"
+      >
+        Attend
+      </button>
+
+      <button
+        title="back to home"
+        type="button"
+        class="close-btn"
+        mat-flat-button
+        color="primary"
+        (click)="backToHome()"
+      >
+        Back Home
+      </button>
+    </div>
   </mat-card>
 </div>
-
