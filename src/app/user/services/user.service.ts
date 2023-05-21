@@ -1,14 +1,18 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ShapedEntity } from "../models";
+import { environment } from "src/environments/environment";
 
+
+const ROOT_PATH = environment.apiUrl;
 @Injectable({
   providedIn:'root'
 })
 
 export class UserService {
-  private attendantsRootPath = 'https://localhost:5001/api/v1.0/attendants';
-  private followersRootPath = 'https://localhost:5001/api/v1.0/followers';
+  private attendantsRootPath = `${ROOT_PATH}/attendants`;
+  private followersRootPath = `${ROOT_PATH}/followers`;
+  private producersRootPath = `${ROOT_PATH}/producers`;
 
   constructor(private http:HttpClient){}
 
@@ -20,7 +24,7 @@ export class UserService {
     pageNumber: number = 0
   ) => {
     return this.http.get<ShapedEntity[]>(
-      `${this.attendantsRootPath}/${attendantId}/producer-events`,
+      `${this.attendantsRootPath}/${attendantId}/events-I-attend`,
       {
         headers: {
           accept: 'application/json',
@@ -34,7 +38,7 @@ export class UserService {
 
   getDistinctEventIAttendDates = (attendantId: string) => {
     return this.http.get<Date[]>(
-      `${this.attendantsRootPath}/${attendantId}/distinct-producer-event-dates`,
+      `${this.attendantsRootPath}/${attendantId}/distinct-events-I-attend-dates`,
       {
         headers: {
           accept: 'application/json',
@@ -43,9 +47,9 @@ export class UserService {
     );
   };
 
-    getArtistsIFollow = (followerId: string, fields: string) => {
+   getArtistsIFollow = (followerId: string, fields: string) => {
     return this.http.get<ShapedEntity[]>(
-      `${this.followersRootPath}/${followerId}/producers`,
+      `${this.followersRootPath}/${followerId}/who-Im-follow`,
       {
         headers: {
           accept: 'application/json',
@@ -54,6 +58,18 @@ export class UserService {
           fields: `${fields}`,
         },
       }
+    );
+  };
+
+   unAttendEvent= (producerId: string, eventId: string,attendantId: string) => {
+    return this.http.delete(
+      `${this.producersRootPath}/${producerId}/events/${eventId}/attendants/${attendantId}`
+    );
+  };
+
+   unFollowArtist = (artistId: string, followerId: string) => {
+    return this.http.delete(
+      `${this.followersRootPath}/${followerId}/unfollow/${artistId}`
     );
   };
 }
