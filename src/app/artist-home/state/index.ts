@@ -35,7 +35,9 @@ export const getPagingMetaData = createSelector(
 export const getCurrentEvent = (eventId: string) =>
   createSelector(
     getArtistFeatureState,
-    (state) => state.artistState.events?.find((e) => e.id === eventId) || null
+    (state) => {
+      state.artistState.events?.find((e) => e.id === eventId) || null
+      }
   );
 
 export const getCurrentEventId = createSelector(
@@ -56,12 +58,4 @@ export const getArtistFollowersCount = createSelector(
   (state) => state.artistState.followersCount
 );
 
-// export const artistSearchResult = createSelector(
-//   getArtistFeatureState,
-//   (state) => state.artistSearchResult
-// );
 
-// export const eventSearchResult = createSelector(
-//   getArtistFeatureState,
-//   (state) => state.eventSearchResult
-// );
