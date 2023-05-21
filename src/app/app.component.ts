@@ -22,6 +22,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
   ngOnInit(): void {
     const isAuth = localStorage.getItem('isAuthenticated');
-    if (isAuth) this.store.dispatch(UserAPIActions.loadUser());
+    if (isAuth) {
+      this.store.dispatch(UserAPIActions.loadUser());
+    }
   }
 }
