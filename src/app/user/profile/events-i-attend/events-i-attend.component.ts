@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { map,Observable,  } from 'rxjs';
 import { ArtistEventAPIActions } from 'src/app/artist-home/state/actions';
 import { State } from 'src/app/state/app.state';
+import { UserAPIActions } from '../../state/actions';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
 
 @Component({
   selector: 'app-events-i-attend',
@@ -13,17 +15,19 @@ import { State } from 'src/app/state/app.state';
 })
 export class EventsIAttendComponent implements OnInit {
   userData$!: Observable<any>;
-  constructor(private store:Store<State>, private route: ActivatedRoute) {}
+  isLoadingData$!: Observable<boolean>;
+  constructor(private store:Store<State>, private route: ActivatedRoute, private loadingService:LoadingService) {}
 
   ngOnInit(): void {
+    this.isLoadingData$ = this.loadingService.isEventsIAttendLoaded$.asObservable();
     this.userData$ = this.route.data.pipe(map((data) => data['userData']));
   }
 
-  backOut(artistId:string, eventId:string, attendantId:string){
-    this.store.dispatch(ArtistEventAPIActions.DeleteArtistEventAttendant({
+  backOut(artistId:string, eventId:string, userId:string){
+    this.store.dispatch(UserAPIActions.unAttendEvent({
       artistId,
       eventId,
-      attendantId
+      userId
     }))
   }
 }
