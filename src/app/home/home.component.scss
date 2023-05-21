@@ -1,0 +1,37 @@
+.home-container {
+  // position: relative;
+  margin-block: 2rem;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.container{
+  position: relative;
+}
+
+.coming-event{
+  // width: 100%;
+  // max-width: inherit;
+}
+
+
+@media (max-width:900px){
+  .home-container{
+    margin-top: 4rem;
+  }
+
+}
+
+@media (max-width: 576px){
+  .home-container{
+    margin-top: 6rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width:959px){
+  .home-content{
+    margin: 0 auto;
+  }
+}
+
+

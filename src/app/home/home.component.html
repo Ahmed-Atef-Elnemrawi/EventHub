@@ -1,0 +1,36 @@
+<div
+  class="home-container container"
+  fxLayout.gt-xs="row"
+  fxLayout.sm="row"
+  fxLayout.xs="column"
+  fxLayoutGap.sm="3rem"
+  fxLayoutGap.gt-xs="3rem"
+  *ngIf="homeData$ | async as data"
+>
+  <app-home-sidenav
+    class="home-sidenav"
+    fxFlex.gt-xs="22%"
+    fxHide.sm="true"
+    fxHide.xs="true"
+
+    [UserId]="data['userId$'] | async"
+  ></app-home-sidenav>
+
+  <app-home-content
+  class="home-content"
+    fxFlex.gt-xs="65%"
+    fxFlex.sm="60%"
+    fxFlexOrder.xs="2"
+    [Artists]="data['artists$'] | async"
+    [Events]="data['events$'] | async"
+  ></app-home-content>
+  <app-coming-event
+    class="coming-event"
+    fxShow.gt-xs="true"
+    fxShow.sm="false"
+    fxHide.xs="true"
+    fxFlex.gt-xs="30%"
+    fxFlexOrder.xs="1"
+    [CurrentDayEvents]="data['notifications$'] | async"
+  ></app-coming-event>
+</div>

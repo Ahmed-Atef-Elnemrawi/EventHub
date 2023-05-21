@@ -1,0 +1,46 @@
+<mat-card
+  class="card home-sidenav mat-elevation-z0"
+  fxFlex="100%"
+  fxLayout="column"
+>
+  <button
+    id="btn1"
+    type="button"
+    mat-flat-button
+    class="active"
+    (click)="navToSection('artists-section')"
+  >
+    Artists
+  </button>
+  <button
+    id="btn2"
+    type="button"
+    mat-flat-button
+    (click)="navToSection('events-section')"
+  >
+    Events
+  </button>
+   <div class="divider" *ngIf="!!UserId"></div>
+  <button
+    id="btn"
+    type="button"
+    mat-flat-button
+    *ngIf="!!UserId"
+    routerLink="/users/{{ UserId }}/events-I-attend"
+    routerLinkActive="active"
+  >
+    Events I Attend
+  </button>
+  <button
+    type="button"
+    id="btn"
+    *ngIf="!!UserId"
+    mat-flat-button
+    routerLink="/users/{{ UserId }}/who-Im-follow"
+    routerLinkActive="active"
+  >
+    Who I'm Follow
+  </button>
+
+  <!-- <button id="btn" mat-flat-button (click)="logout()">Log Out</button> -->
+</mat-card>

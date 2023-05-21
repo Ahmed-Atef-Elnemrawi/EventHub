@@ -1,0 +1,26 @@
+<div class="container" >
+  <div class="coming-event-container" fxLayout="column" fxLayoutGap=".2rem">
+    <p class="card-title">Event Notification Center
+    </p>
+    <mat-card class="mat-elevation-z0 card coming-event">
+      <p class="default-message" *ngIf="CurrentDayEvents?.length === 0">You Don't Have Any Event Today.</p>
+      <div class="notification-card" *ngFor="let event of CurrentDayEvents!">
+        <h2 class="notification-title">
+          {{ event.entity?.Date | date : "hh:mm aa" }}
+        </h2>
+        <p class="notification-message">
+          You have to attend
+          <a
+            [routerLink]="[
+              '/artists',
+              event.entity?.Producer?.producerId,
+              { outlets: { secondary: ['events', event.id] } }
+            ]"
+            >{{ event.entity?.Name }}</a
+          >
+          Today.
+        </p>
+      </div>
+    </mat-card>
+  </div>
+</div>

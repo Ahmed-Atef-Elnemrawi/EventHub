@@ -1,0 +1,117 @@
+<div class="container" fxLayout="column" fxFlex="100%" fxLayoutGap="3rem">
+  <div
+    class="artists-section"
+    id="artists-section"
+    fxLayout="column"
+    fxLayoutGap=".2rem"
+  >
+    <div
+      class="card-header"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <p>The Latest Artists</p>
+      <app-loading *ngIf="isArtistsLoadedState$ | async"></app-loading>
+    </div>
+    <mat-card class="card mat-elevation-z0" *ngFor="let artist of Artists">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button class="avatar">
+          {{
+            ((artist.entity?.FirstName)![0] | camelCase) +
+              ((artist.entity?.LastName)![0] | camelCase)
+          }}
+        </button>
+        <div>
+          <a class="artist-name" [routerLink]="['/artists', artist.id]">
+            {{
+              artist.entity?.FirstName! + " " + artist.entity?.LastName!
+                | camelCase
+            }}</a
+          >
+          <p class="job-title">{{ artist.entity?.JobTitle | camelCase }}</p>
+        </div>
+      </div>
+      <div
+        class="followersCount"
+        title="followers count"
+        fxFlexAlign="flex-end"
+      >
+        <mat-icon fontIcon="person"></mat-icon
+        >{{ artist.entity?.FollowersCount }}
+      </div>
+    </mat-card>
+    <button
+      class="more-btn"
+      mat-flat-button
+      color="accent"
+      fxFlexAlign="center"
+      (click)="loadMoreArtists()"
+    >
+      Load More...
+    </button>
+  </div>
+
+  <div
+    class="events-sections"
+    id="events-section"
+    fxLayout="column"
+    fxLayoutGap=".2rem"
+  >
+    <div
+      class="card-header"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <p>The Latest Events</p>
+      <app-loading *ngIf="isEventsLoadedState$ | async"></app-loading>
+    </div>
+    <mat-card class="event-card mat-elevation-z0" *ngFor="let event of Events">
+      <div class="date-time">
+        <div class="date">
+          <div class="day">{{ event.entity?.Date | date : "dd" }}</div>
+          <div style="font-weight: 600; font-size: 14px">
+            <div class="">{{ event.entity?.Date | date : "EEEE" }}</div>
+            <div class="">{{ event.entity?.Date | date : "LLL, YYYY" }}</div>
+          </div>
+        </div>
+        <div class="time">{{ event.entity?.Date | date : "hh:mm a" }}</div>
+      </div>
+      <div class="content">
+        <p class="event-name">{{ event.entity?.Name | camelCase }}</p>
+        <p class="category">{{ event.entity?.Category?.name }}</p>
+        <a
+          class="event-artist-name"
+          [routerLink]="['/artists', event.entity?.Producer.producerId]"
+        >
+          {{
+            (event.entity?.Producer.firstName | camelCase) +
+              (event.entity?.Producer.lastName | camelCase)
+          }}
+        </a>
+      </div>
+      <div class="actions">
+        <button
+          mat-flat-button
+          color="primary"
+          class="btn"
+          [routerLink]="[
+            '/artists',
+            event.entity?.Producer?.producerId,
+            { outlets: { secondary: ['events', event.id] } }
+          ]"
+        >
+          Details
+        </button>
+      </div>
+    </mat-card>
+    <button
+      mat-flat-button
+      class="more-btn"
+      color="accent"
+      fxFlexAlign="center"
+      (click)="loadMoreEvents()"
+    >
+      Load More...
+    </button>
+  </div>
+</div>
