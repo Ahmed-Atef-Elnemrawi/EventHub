@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
-import { SharedService } from '../shared/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +13,9 @@ export class HomeComponent implements OnInit {
   toggleNotifications$!: Observable<boolean>;
   constructor(
     private route: ActivatedRoute,
-    private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
     this.homeData$ = this.route.data.pipe(map((data) => data['HomeData']));
-    this.toggleNotifications$ = this.sharedService.toggleNotifications$;
   }
 }
