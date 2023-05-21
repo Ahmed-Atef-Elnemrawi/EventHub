@@ -8,13 +8,16 @@ import {
   FollowerForCreationDto,
   ShapedEntity,
 } from '../models';
+import { environment } from 'src/environments/environment';
+
+const ROOT_PATH = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArtistService {
-  private producersRootPath = 'https://localhost:5001/api/v1.0/producers';
-  private followersRootPath = 'https://localhost:5001/api/v1.0/followers';
+  private producersRootPath = `${ROOT_PATH}/producers`;
+  private followersRootPath = `${ROOT_PATH}/followers`;
 
   constructor(private http: HttpClient) {}
 
@@ -89,13 +92,13 @@ export class ArtistService {
 
   removeArtistFollower = (artistId: string, followerId: string) => {
     return this.http.delete(
-      `${this.followersRootPath}/${followerId}/producers/${artistId}`
+      `${this.followersRootPath}/${followerId}/unfollow/${artistId}`
     );
   };
 
   isUserFollowingArtist = (followerId: string, artistId: string) => {
     return this.http.get<{ result: boolean }>(
-      `${this.followersRootPath}/${followerId}/producers/${artistId}`,
+      `${this.followersRootPath}/${followerId}/is-I-follow/${artistId}`,
       {
         headers: {
           accept: 'application/json',
